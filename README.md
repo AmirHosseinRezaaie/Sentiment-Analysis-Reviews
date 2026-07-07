@@ -1,119 +1,86 @@
-<!DOCTYPE html>
-<html lang="fa">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>README - Sentiment Analysis Project</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            color: #24292e;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #ffffff;
-        }
-        h1, h2, h3 {
-            border-bottom: 1px solid #eaecef;
-            padding-bottom: 0.3em;
-        }
-        h1 { font-size: 2em; }
-        h2 { font-size: 1.5em; }
-        h3 { font-size: 1.25em; }
-        a { color: #0366d6; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        code {
-            background-color: #f6f8fa;
-            padding: 0.2em 0.4em;
-            border-radius: 3px;
-            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-            font-size: 85%;
-        }
-        pre {
-            background-color: #f6f8fa;
-            padding: 16px;
-            border-radius: 6px;
-            overflow: auto;
-            font-size: 85%;
-            line-height: 1.45;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 15px 0;
-        }
-        th, td {
-            border: 1px solid #dfe2e5;
-            padding: 8px 13px;
-            text-align: left;
-        }
-        th {
-            background-color: #f6f8fa;
-            font-weight: 600;
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-        .badge {
-            display: inline-block;
-            padding: 0.2em 0.6em;
-            margin: 0 0.2em;
-            font-size: 75%;
-            font-weight: 700;
-            line-height: 1;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: baseline;
-            border-radius: 0.25rem;
-            color: #fff;
-            background-color: #28a745;
-        }
-        .badge-blue { background-color: #0366d6; }
-        .badge-purple { background-color: #6f42c1; }
-    </style>
-</head>
-<body>
+<div align="center">
 
-    <h1>🧠 Sentiment Analysis of Digital Product Reviews</h1>
+<h1>🧠 تحلیل احساسات نظرات محصولات دیجیتال</h1>
 
-    <p>
-        <span class="badge">Python</span>
-        <span class="badge badge-blue">Machine Learning</span>
-        <span class="badge badge-purple">Web Scraping</span>
-        <span class="badge">NLP</span>
-    </p>
+<h3>
+پروژه‌ی کامل تحلیل احساسات با استفاده از وب‌اسکرپینگ، پردازش متن و یادگیری ماشین
+<br>
+بر روی نظرات فارسی و انگلیسی
+</h3>
 
-    <blockquote>
-        <strong>Course Project</strong> – Computer Programming Fundamentals<br>
-        Instructor: Tayebeh Rafiei · Semester: Summer 2025
-    </blockquote>
+<br>
 
-    <hr>
+<img src="https://img.shields.io/badge/Python-3.9+-blue?style=for-the-badge&logo=python">
+<img src="https://img.shields.io/badge/Machine%20Learning-Scikit--Learn-orange?style=for-the-badge">
+<img src="https://img.shields.io/badge/Web%20Scraping-BeautifulSoup-green?style=for-the-badge">
+<img src="https://img.shields.io/badge/NLP-TF--IDF-red?style=for-the-badge">
 
-    <h2>📌 Project Overview</h2>
-    <p>
-        This project aims to automatically classify user sentiment (positive/negative) from product reviews using <strong>web scraping</strong>, <strong>text preprocessing</strong>, and <strong>machine learning</strong>. Reviews are collected from three platforms:
-    </p>
-    <ul>
-        <li>🇮🇷 <strong>Basalam</strong> (Persian)</li>
-        <li>🇮🇷 <strong>Taaghche</strong> (Persian)</li>
-        <li>🇬🇧 <strong>Trustpilot</strong> (English)</li>
-    </ul>
 
-    <h2>🧰 Tools & Technologies</h2>
-    <ul>
-        <li><strong>Web Scraping</strong>: <code>requests</code>, <code>BeautifulSoup</code>, <code>Selenium</code></li>
-        <li><strong>Data Processing</strong>: <code>pandas</code>, <code>numpy</code>, <code>regex</code></li>
-        <li><strong>Visualization</strong>: <code>matplotlib</code>, <code>seaborn</code>, <code>wordcloud</code></li>
-        <li><strong>ML Models</strong>: <code>Logistic Regression</code>, <code>Multinomial Naive Bayes</code>, <code>Linear SVM</code></li>
-        <li><strong>Text Vectorization</strong>: <code>TF-IDF</code></li>
-        <li><strong>Evaluation</strong>: <code>accuracy</code>, <code>precision</code>, <code>recall</code>, <code>F1-score</code>, <code>confusion matrix</code></li>
-    </ul>
+</div>
 
-    <h2>📁 Project Structure</h2>
-    <pre>
+---
+
+#  معرفی پروژه
+
+این پروژه یک سیستم کامل برای **تحلیل احساسات (Sentiment Analysis)** نظرات کاربران درباره‌ی محصولات دیجیتال است. داده‌ها از سه وب‌سایت مختلف **اسکرپ** شده و پس از پردازش، با استفاده از مدل‌های یادگیری ماشین طبقه‌بندی می‌شوند.
+
+### ویژگی‌های پروژه
+
+✔ استخراج خودکار نظرات از وب‌سایت‌های فارسی و انگلیسی
+
+✔ پاکسازی و پیش‌پردازش پیشرفته‌ی متون
+
+✔ تحلیل اکتشافی داده‌ها با نمودارهای متنوع
+
+✔ بردارسازی متن با روش TF-IDF
+
+✔ پیاده‌سازی سه مدل یادگیری ماشین
+
+✔ مقایسه و ارزیابی عملکرد مدل‌ها
+
+✔ مستندسازی کامل و گزارش نهایی
+
+---
+
+## 🗂 دیتاست‌های استفاده شده
+
+| وب‌سایت | زبان | تعداد نظرات |
+|---------|------|------------|
+| **Basalam** | فارسی | ~۱۰۰۰ |
+| **Taaghche** | فارسی | ~۱۰۰۰ |
+| **Trustpilot** | انگلیسی | ~۱۰۰۰ |
+
+---
+
+## 🧰 تکنولوژی‌ها و کتابخانه‌ها
+
+### وب‌اسکرپینگ
+- `requests`
+- `BeautifulSoup`
+- `Selenium`
+
+### پردازش داده
+- `pandas`
+- `numpy`
+- `regex`
+
+### مصورسازی
+- `matplotlib`
+- `seaborn`
+- `wordcloud`
+
+### یادگیری ماشین
+- `scikit-learn`
+  - Logistic Regression
+  - Multinomial Naive Bayes
+  - Linear SVM
+- `TF-IDF Vectorizer`
+
+---
+
+## 📂 ساختار پروژه
+
+```
 SentimentProject/
 │
 ├── data/
@@ -123,11 +90,32 @@ SentimentProject/
 │
 ├── figures/
 │   ├── basalam/
+│   │   ├── confusion_matrix_*.png
+│   │   ├── Distribution_Text_Length.png
+│   │   ├── Length_comments_sentiment_plot.png
+│   │   ├── Negative_comments_plot.png
+│   │   ├── Positive_comments_plot.png
+│   │   └── Sentiment_distribution_plot.png
 │   ├── taaghche/
+│   ├── confusion_matrix_*.png
+│   │   ├── Distribution_Text_Length.png
+│   │   ├── Length_comments_sentiment_plot.png
+│   │   ├── Negative_comments_plot.png
+│   │   ├── Positive_comments_plot.png
+│   │   └── Sentiment_distribution_plot.png
 │   └── trustpilot/
+│   ├── confusion_matrix_*.png
+│   │   ├── Distribution_Text_Length.png
+│   │   ├── Length_comments_sentiment_plot.png
+│   │   └── Sentiment_distribution_plot.png
 │
 ├── files/
-│   ├── train/ & test/ comments
+│   ├── b_train_comments/
+│   ├── b_test_comments/
+│   ├── t_train_comments/
+│   ├── t_test_comments/
+│   ├── train_comments/
+│   ├── test_comments/
 │   └── font/
 │
 ├── models/
@@ -135,6 +123,7 @@ SentimentProject/
 │   ├── MultinomialNB_model.pkl
 │   ├── LinearSVM_model.pkl
 │   ├── tfidf_vectorizer.pkl
+│   ├── sentiment_model.pkl
 │   └── sentiment_model_final.pkl
 │
 ├── reports/
@@ -143,96 +132,249 @@ SentimentProject/
 │
 ├── requirements/
 │   ├── TextPreprocessing/
+│   │   └── Taghche_Text_Preprocessing.py
 │   └── WebScraping/
+│       ├── basalam.py
+│       ├── Taaghche_reviews_code.py
+│       └── Trustpilot.py
 │
 └── README.md
-    </pre>
+```
 
-    <h2>⚙️ How to Run</h2>
-    <h3>1. Clone the repository</h3>
-    <pre><code>git clone https://github.com/AmirHosseinRezaaie/Sentiment-Analysis-Reviews.git
-cd Sentiment-Analysis-Reviews</code></pre>
+---
 
-    <h3>2. Install dependencies</h3>
-    <pre><code>pip install -r requirements.txt</code></pre>
+## ⚙️ نحوه اجرا
 
-    <h3>3. Run the notebook</h3>
-    <p>Open <code>final_project.ipynb</code> in Jupyter or Colab and run all cells.</p>
+### 1. کلون کردن ریپازیتوری
 
-    <h3>4. (Optional) Scrape new data</h3>
-    <p>Use scripts inside <code>requirements/WebScraping/</code> to scrape fresh reviews.</p>
+```bash
+git clone https://github.com/AmirHosseinRezaaie/Sentiment-Analysis-Reviews.git
+cd Sentiment-Analysis-Reviews
+```
 
-    <h2>📊 Results Summary</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Model</th>
-                <th>Accuracy</th>
-                <th>F1-Score</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Logistic Regression</td>
-                <td>~88%</td>
-                <td>~0.87</td>
-            </tr>
-            <tr>
-                <td>Multinomial Naive Bayes</td>
-                <td>~86%</td>
-                <td>~0.85</td>
-            </tr>
-            <tr>
-                <td><strong>Linear SVM</strong></td>
-                <td><strong>~89%</strong></td>
-                <td><strong>~0.88</strong></td>
-            </tr>
-        </tbody>
-    </table>
-    <blockquote>
-        ✅ Linear SVM performed best overall with balanced precision/recall.
-    </blockquote>
+### 2. نصب وابستگی‌ها
 
-    <h2>📈 Visualizations</h2>
-    <ul>
-        <li>Sentiment distribution</li>
-        <li>Word clouds for positive/negative reviews</li>
-        <li>Text length analysis</li>
-        <li>Confusion matrices for each model</li>
-    </ul>
+```bash
+pip install -r requirements.txt
+```
 
-    <h2>🧠 What I Learned</h2>
-    <ul>
-        <li>Real-world data scraping challenges (dynamic content, pagination)</li>
-        <li>Importance of text cleaning for Persian (نویسه‌های خاص، نیم‌فاصله)</li>
-        <li>TF-IDF vs. CountVectorizer</li>
-        <li>Model evaluation beyond accuracy</li>
-        <li>Project structuring and documentation</li>
-    </ul>
+### 3. اجرای نوت‌بوک
 
-    <h2>🚀 Future Improvements</h2>
-    <ul>
-        <li>Deep learning models (LSTM, BERT)</li>
-        <li>Multi-lingual support (Persian + English)</li>
-        <li>Real-time dashboard</li>
-        <li>Aspect-based sentiment analysis</li>
-        <li>Scraping from more platforms</li>
-    </ul>
+فایل `final_project.ipynb` را در Jupyter یا Colab باز کرده و تمام سلول‌ها را اجرا کنید.
 
-    <h2>👤 Author</h2>
-    <p>
-        <strong>AmirHossein Rezaaie</strong><br>
-        <a href="https://github.com/AmirHosseinRezaaie">GitHub</a> · 
-        <a href="https://www.linkedin.com/in/amirhoseinrezaaie">LinkedIn</a>
-    </p>
+### 4. (اختیاری) اسکرپ کردن داده‌های جدید
 
-    <h2>📜 License</h2>
-    <p>This project is for educational purposes only.</p>
+از اسکریپت‌های داخل پوشه `requirements/WebScraping/` برای دریافت نظرات جدید استفاده کنید.
 
-    <hr>
-    <p style="text-align: center; color: #586069;">
-        Made with ❤️ for the love of data and machine learning
-    </p>
+---
 
-</body>
-</html>
+## 📊 نتایج مدل‌ها
+
+| مدل | دقت (Accuracy) | F1-Score |
+|-----|---------------|----------|
+| **Logistic Regression** | ~۸۸٪ | ~۰.۸۷ |
+| **Multinomial Naive Bayes** | ~۸۶٪ | ~۰.۸۵ |
+| **Linear SVM** | **~۸۹٪** | **~۰.۸۸** |
+
+> ✅ مدل Linear SVM بهترین عملکرد را با Precision و Recall متعادل داشته است.
+
+### ماتریس درهم‌ریختگی (Confusion Matrix)
+
+<div align="center">
+<img src="figures/basalam/confusion_matrix_LinearSVM.png" width="400"/>
+</div>
+
+---
+
+## 📈 مصورسازی‌ها
+
+- توزیع احساسات (مثبت/منفی)
+- ابرکلمات (Word Cloud) برای نظرات مثبت و منفی
+- تحلیل طول نظرات
+- ماتریس درهم‌ریختگی برای هر مدل
+
+---
+
+## 🧠 دستاوردهای یادگیری
+
+- چالش‌های اسکرپینگ داده‌های واقعی (محتوای داینامیک، صفحه‌بندی)
+- اهمیت پاکسازی متن برای زبان فارسی (نویسه‌های خاص، نیم‌فاصله)
+- تفاوت TF-IDF با CountVectorizer
+- ارزیابی مدل فراتر از دقت (دقت، فراخوانی، F1)
+- ساختاردهی صحیح پروژه و مستندسازی
+
+---
+
+## 🚀 بهبودهای آینده
+
+- استفاده از مدل‌های یادگیری عمیق (LSTM، BERT)
+- پشتیبانی از چندین زبان همزمان
+- داشبورد گرافیکی لحظه‌ای
+- تحلیل احساسات جنبه‌محور (Aspect-Based)
+- اسکرپینگ از وب‌سایت‌های بیشتر
+
+---
+
+<div align="center">
+
+## 👤 نویسنده
+
+**امیرحسین رضایی**
+
+[![GitHub](https://img.shields.io/badge/GitHub-AmirHosseinRezaaie-181717?style=for-the-badge&logo=github)](https://github.com/AmirHosseinRezaaie)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-0A66C2?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/amirhoseinrezaaie)
+
+---
+
+### ⭐ اگر این پروژه برای شما مفید بود، با ستاره دادن به آن کمک کنید.
+
+طراحی شده با ❤️ برای داده و یادگیری ماشین
+
+</div>
+
+# 🇬🇧 Project Overview
+
+This project is a complete system for **Sentiment Analysis** of user reviews about digital products. Data is **scraped** from three different websites and after preprocessing, classified using machine learning models.
+
+### Key Features
+
+✔ Automatic review extraction from Persian and English websites
+
+✔ Advanced text cleaning and preprocessing
+
+✔ Exploratory data analysis with various visualizations
+
+✔ Text vectorization using TF-IDF method
+
+✔ Implementation of three machine learning models
+
+✔ Model comparison and evaluation
+
+✔ Complete documentation and final report
+
+---
+
+## 📊 Datasets Used
+
+| Website | Language | Number of Reviews |
+|---------|----------|-------------------|
+| **Basalam** | Persian | ~1000 |
+| **Taaghche** | Persian | ~1000 |
+| **Trustpilot** | English | ~1000 |
+
+---
+
+## 🧰 Technologies & Libraries
+
+### Web Scraping
+- `requests`
+- `BeautifulSoup`
+- `Selenium`
+
+### Data Processing
+- `pandas`
+- `numpy`
+- `regex`
+
+### Visualization
+- `matplotlib`
+- `seaborn`
+- `wordcloud`
+
+### Machine Learning
+- `scikit-learn`
+  - Logistic Regression
+  - Multinomial Naive Bayes
+  - Linear SVM
+- `TF-IDF Vectorizer`
+
+---
+
+## ⚙️ How to Run
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/AmirHosseinRezaaie/Sentiment-Analysis-Reviews.git
+cd Sentiment-Analysis-Reviews
+```
+
+### 2. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Run the Notebook
+
+Open `final_project.ipynb` in Jupyter or Colab and run all cells.
+
+### 4. (Optional) Scrape New Data
+
+Use scripts inside `requirements/WebScraping/` to fetch new reviews.
+
+---
+
+## 📊 Model Results
+
+| Model | Accuracy | F1-Score |
+|-------|----------|----------|
+| **Logistic Regression** | ~88% | ~0.87 |
+| **Multinomial Naive Bayes** | ~86% | ~0.85 |
+| **Linear SVM** | **~89%** | **~0.88** |
+
+> ✅ Linear SVM performed best overall with balanced precision and recall.
+
+### Confusion Matrix
+
+<div align="center">
+<img src="figures/basalam/confusion_matrix_LinearSVM.png" width="400"/>
+</div>
+
+---
+
+## 📈 Visualizations
+
+- Sentiment distribution (Positive/Negative)
+- Word clouds for positive and negative reviews
+- Text length analysis
+- Confusion matrices for each model
+
+---
+
+## 🧠 What I Learned
+
+- Real-world data scraping challenges (dynamic content, pagination)
+- Importance of text cleaning for Persian (special characters, half-spaces)
+- Difference between TF-IDF and CountVectorizer
+- Model evaluation beyond accuracy (precision, recall, F1)
+- Proper project structuring and documentation
+
+---
+
+## 🚀 Future Improvements
+
+- Deep learning models (LSTM, BERT)
+- Multi-lingual support simultaneously
+- Real-time interactive dashboard
+- Aspect-based sentiment analysis
+- Scraping from more platforms
+
+---
+
+<div align="center">
+
+## 👤 Author
+
+**AmirHossein Rezaaie**
+
+[![GitHub](https://img.shields.io/badge/GitHub-AmirHosseinRezaaie-181717?style=for-the-badge&logo=github)](https://github.com/AmirHosseinRezaaie)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-0A66C2?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/amirhoseinrezaaie)
+
+---
+
+### ⭐ If you found this project useful, please consider giving it a Star.
+
+Made with ❤️ for Data and Machine Learning
+
+</div>
