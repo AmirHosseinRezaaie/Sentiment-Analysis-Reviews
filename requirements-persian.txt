@@ -1,0 +1,7 @@
+﻿-r requirements-core.txt
+
+# Persian text processing and visualization
+hazm
+arabic-reshaper
+python-bidi
+imbalanced-learn

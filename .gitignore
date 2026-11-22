@@ -1,8 +1,19 @@
-# Python
+﻿# Python
 __pycache__/
 *.py[cod]
 *.pkl
 .DS_Store
 venv/
 env/
+.venv/
 .ipynb_checkpoints/
+
+# Notebook and tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local environment files
+.env
+.env.*
+!.env.example

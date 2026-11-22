@@ -1,380 +1,167 @@
-<div align="center">
+﻿# تحلیل احساسات نظرات | Sentiment Analysis Reviews
 
-<h1>🧠 تحلیل احساسات نظرات محصولات دیجیتال</h1>
+پروژه‌ای پژوهشی برای بررسی یک جریان کامل تحلیل احساسات روی دیدگاه‌های کاربران: از جمع‌آوری داده از وب‌سایت‌ها تا پردازش زبان طبیعی، آموزش مدل‌های یادگیری ماشین و ارزیابی نتایج.
 
-<h3>
-پروژه‌ی کامل تحلیل احساسات با استفاده از وب‌اسکرپینگ، پردازش متن و یادگیری ماشین
-<br>
-بر روی نظرات فارسی و انگلیسی
-</h3>
+این مخزن در ابتدا به شکل چند نوت‌بوک مستقل توسعه داده شده است. ساختار فعلی مسئولیت هر حوزه را جدا می‌کند و نوت‌بوک‌ها و خروجی‌های تاریخی را برای بررسی و بازتولید آزمایش‌ها نگه می‌دارد.
 
-<br>
+## نقشه پروژه
 
-<img src="https://img.shields.io/badge/Python-3.9+-blue?style=for-the-badge&logo=python">
-<img src="https://img.shields.io/badge/Machine%20Learning-Scikit--Learn-orange?style=for-the-badge">
-<img src="https://img.shields.io/badge/Web%20Scraping-BeautifulSoup-green?style=for-the-badge">
-<img src="https://img.shields.io/badge/NLP-TF--IDF-red?style=for-the-badge">
-
-
-</div>
-
----
-
-#  معرفی پروژه
-
-این پروژه یک سیستم کامل برای **تحلیل احساسات (Sentiment Analysis)** نظرات کاربران درباره‌ی محصولات دیجیتال است. داده‌ها از سه وب‌سایت مختلف **اسکرپ** شده و پس از پردازش، با استفاده از مدل‌های یادگیری ماشین طبقه‌بندی می‌شوند.
-
-### ویژگی‌های پروژه
-
-✔ استخراج خودکار نظرات از وب‌سایت‌های فارسی و انگلیسی
-
-✔ پاکسازی و پیش‌پردازش پیشرفته‌ی متون
-
-✔ تحلیل اکتشافی داده‌ها با نمودارهای متنوع
-
-✔ بردارسازی متن با روش TF-IDF
-
-✔ پیاده‌سازی سه مدل یادگیری ماشین
-
-✔ مقایسه و ارزیابی عملکرد مدل‌ها
-
-✔ مستندسازی کامل و گزارش نهایی
-
----
-
-## 🗂 دیتاست‌های استفاده شده
-
-| وب‌سایت | زبان | تعداد نظرات |
-|---------|------|------------|
-| **Basalam** | فارسی | ~۱۰۰۰ |
-| **Taaghche** | فارسی | ~۱۰۰۰ |
-| **Trustpilot** | انگلیسی | ~۱۰۰۰ |
-
----
-
-## 🧰 تکنولوژی‌ها و کتابخانه‌ها
-
-### وب‌اسکرپینگ
-- `requests`
-- `BeautifulSoup`
-- `Selenium`
-
-### پردازش داده
-- `pandas`
-- `numpy`
-- `regex`
-
-### مصورسازی
-- `matplotlib`
-- `seaborn`
-- `wordcloud`
-
-### یادگیری ماشین
-- `scikit-learn`
-  - Logistic Regression
-  - Multinomial Naive Bayes
-  - Linear SVM
-- `TF-IDF Vectorizer`
-
----
-
-## 📂 ساختار پروژه
-
-```
+```text
 SentimentProject/
-│
-├── data/
-│   ├── Basalam_reviews.csv
-│   ├── Taghcheh_reviews.csv
-│   └── Trustpilot_reviews.csv
-│
-├── figures/
+├── app/                         # نقطه ورود و رابط خط فرمان پروژه
+│   └── main.py
+├── src/
+│   └── sentiment_analysis/
+│       ├── scraping/             # استخراج داده از وب‌سایت‌ها
+│       └── preprocessing/        # کدهای قدیمی پیش‌پردازش متن
+├── notebooks/
+│   └── experiments/              # آزمایش‌های کامل هر منبع داده
+├── data/                         # داده‌های خام و پاک‌سازی‌شده، به تفکیک منبع
 │   ├── basalam/
-│   │   ├── confusion_matrix_*.png
-│   │   ├── Distribution_Text_Length.png
-│   │   ├── Length_comments_sentiment_plot.png
-│   │   ├── Negative_comments_plot.png
-│   │   ├── Positive_comments_plot.png
-│   │   └── Sentiment_distribution_plot.png
-│   ├── taaghche/
-│   ├── confusion_matrix_*.png
-│   │   ├── Distribution_Text_Length.png
-│   │   ├── Length_comments_sentiment_plot.png
-│   │   ├── Negative_comments_plot.png
-│   │   ├── Positive_comments_plot.png
-│   │   └── Sentiment_distribution_plot.png
+│   ├── Taaghche/
 │   └── trustpilot/
-│   ├── confusion_matrix_*.png
-│   │   ├── Distribution_Text_Length.png
-│   │   ├── Length_comments_sentiment_plot.png
-│   │   └── Sentiment_distribution_plot.png
-│
-├── files/
-│   ├── b_train_comments/
-│   ├── b_test_comments/
-│   ├── t_train_comments/
-│   ├── t_test_comments/
-│   ├── train_comments/
-│   ├── test_comments/
-│   └── font/
-│
-├── models/
-│   ├── LogisticRegression_model.pkl
-│   ├── MultinomialNB_model.pkl
-│   ├── LinearSVM_model.pkl
-│   ├── tfidf_vectorizer.pkl
-│   ├── sentiment_model.pkl
-│   └── sentiment_model_final.pkl
-│
-├── reports/
-│   ├── final_report.pdf
-│   └── final_report.docx
-│
-├── requirements/
-│   ├── TextPreprocessing/
-│   │   └── Taghche_Text_Preprocessing.py
-│   └── WebScraping/
-│       ├── basalam.py
-│       ├── Taaghche_reviews_code.py
-│       └── Trustpilot.py
-│
-└── README.md
+├── models/                       # مدل‌های ذخیره‌شده و جدول مقایسه
+├── figures/                      # نمودارهای EDA و ماتریس‌های درهم‌ریختگی
+├── files/                        # مجموعه‌های train/test و منابع جانبی
+├── reports/                      # گزارش نهایی PDF و DOCX
+├── requirements-core.txt         # وابستگی‌های پایه تحلیل و نوت‌بوک
+├── requirements-scraping.txt     # وابستگی‌های وب‌اسکرپینگ
+├── requirements-persian.txt      # وابستگی‌های NLP فارسی
+└── pyproject.toml                # مشخصات نصب و فرمان پروژه
 ```
 
----
+## حوزه‌های فنی
 
-## ⚙️ نحوه اجرا
+| حوزه | محل | مسئولیت |
+|---|---|---|
+| Web Scraping | `src/sentiment_analysis/scraping/` | جمع‌آوری دیدگاه از Basalam، Taaghche و Trustpilot با Selenium و BeautifulSoup |
+| NLP و پیش‌پردازش | `src/sentiment_analysis/preprocessing/` و نوت‌بوک‌ها | پاک‌سازی متن، نرمال‌سازی، حذف stop words و آماده‌سازی داده فارسی و انگلیسی |
+| EDA و مصورسازی | نوت‌بوک‌ها و `figures/` | بررسی توزیع برچسب‌ها، طول دیدگاه‌ها، Word Cloud و نمودارهای تحلیلی |
+| Feature Engineering | نوت‌بوک‌ها | تبدیل متن به ویژگی‌های عددی با TF-IDF و n-gram |
+| Machine Learning | نوت‌بوک‌ها و `models/` | آزمایش Multinomial Naive Bayes، Logistic Regression و Linear SVM |
+| Evaluation | نوت‌بوک‌ها، `models/model_comparison.csv` و `figures/` | بررسی Accuracy، Precision، Recall، F1 و Confusion Matrix |
+| گزارش‌دهی | `reports/` | نگهداری گزارش مکتوب پروژه |
+| رابط اجرا | `app/` | دسترسی یکپارچه به آزمایش‌ها و اسکریپت‌های استخراج از خط فرمان |
 
-### 1. کلون کردن ریپازیتوری
+## جریان داده
+
+```text
+وب‌سایت‌ها
+    │
+    ▼
+Web Scraping (src/sentiment_analysis/scraping)
+    │
+    ▼
+داده خام (data/<source>/)
+    │
+    ▼
+NLP / Text Preprocessing
+    │
+    ▼
+داده پاک‌سازی‌شده و برچسب‌خورده
+    │
+    ▼
+EDA → TF-IDF → Train / Test
+    │
+    ▼
+Naive Bayes / Logistic Regression / Linear SVM
+    │
+    ▼
+Evaluation → models/ + figures/ + reports/
+```
+
+نوت‌بوک‌ها مسیرهای داده و خروجی را از ریشه مخزن می‌خوانند. به همین دلیل هنگام اجرای آن‌ها، ریشه پروژه به عنوان working directory تنظیم می‌شود و پوشه‌های `data/`، `models/`، `figures/` و `files/` در ریشه باقی مانده‌اند.
+
+## شروع سریع
+
+Python 3.9 یا جدیدتر پیشنهاد می‌شود. ابتدا محیط مجازی بسازید و وابستگی‌های موردنیاز خود را نصب کنید:
 
 ```bash
-git clone https://github.com/AmirHosseinRezaaie/Sentiment-Analysis-Reviews.git
-cd Sentiment-Analysis-Reviews
+python -m venv .venv
+
+# Windows
+.venv\Scripts\activate
+
+# Linux / macOS
+source .venv/bin/activate
+
+pip install -r requirements-core.txt
 ```
 
-### 2. نصب وابستگی‌ها
+برای اجرای استخراج داده، وابستگی scraping را هم نصب کنید:
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-scraping.txt
 ```
 
-### 3. اجرای نوت‌بوک
-
-فایل `final_project.ipynb` را در Jupyter یا Colab باز کرده و تمام سلول‌ها را اجرا کنید.
-
-### 4. (اختیاری) اسکرپ کردن داده‌های جدید
-
-از اسکریپت‌های داخل پوشه `requirements/WebScraping/` برای دریافت نظرات جدید استفاده کنید.
-
----
-
-## 📊 نتایج مدل‌ها
-
-| مدل | دقت (Accuracy) | F1-Score |
-|-----|---------------|----------|
-| **Logistic Regression** | ~۸۸٪ | ~۰.۸۷ |
-| **Multinomial Naive Bayes** | ~۸۶٪ | ~۰.۸۵ |
-| **Linear SVM** | **~۸۹٪** | **~۰.۸۸** |
-
-> ✅ مدل Linear SVM بهترین عملکرد را با Precision و Recall متعادل داشته است.
-
-### ماتریس درهم‌ریختگی (Confusion Matrix)
-
-<div align="center">
-<img src="figures/basalam/confusion_matrix_LinearSVM.png" width="400"/>
-</div>
-
----
-
-## 📈 مصورسازی‌ها
-
-- توزیع احساسات (مثبت/منفی)
-- ابرکلمات (Word Cloud) برای نظرات مثبت و منفی
-- تحلیل طول نظرات
-- ماتریس درهم‌ریختگی برای هر مدل
-
----
-
-## 🧠 دستاوردهای یادگیری
-
-- چالش‌های اسکرپینگ داده‌های واقعی (محتوای داینامیک، صفحه‌بندی)
-- اهمیت پاکسازی متن برای زبان فارسی (نویسه‌های خاص، نیم‌فاصله)
-- تفاوت TF-IDF با CountVectorizer
-- ارزیابی مدل فراتر از دقت (دقت، فراخوانی، F1)
-- ساختاردهی صحیح پروژه و مستندسازی
-
----
-
-## 🚀 بهبودهای آینده
-
-- استفاده از مدل‌های یادگیری عمیق (LSTM، BERT)
-- پشتیبانی از چندین زبان همزمان
-- داشبورد گرافیکی لحظه‌ای
-- تحلیل احساسات جنبه‌محور (Aspect-Based)
-- اسکرپینگ از وب‌سایت‌های بیشتر
-
----
-
-<div align="center">
-
-## 👤 نویسنده
-
-**امیرحسین رضایی**
-
-[![GitHub](https://img.shields.io/badge/GitHub-AmirHosseinRezaaie-181717?style=for-the-badge&logo=github)](https://github.com/AmirHosseinRezaaie)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-0A66C2?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/amirhoseinrezaaie)
-
----
-
-### ⭐ اگر این پروژه برای شما مفید بود، با ستاره دادن به آن کمک کنید.
-
-طراحی شده با ❤️ برای داده و یادگیری ماشین
-
-</div>
-
-# 🇬🇧 Project Overview
-
-This project is a complete system for **Sentiment Analysis** of user reviews about digital products. Data is **scraped** from three different websites and after preprocessing, classified using machine learning models.
-
-### Key Features
-
-✔ Automatic review extraction from Persian and English websites
-
-✔ Advanced text cleaning and preprocessing
-
-✔ Exploratory data analysis with various visualizations
-
-✔ Text vectorization using TF-IDF method
-
-✔ Implementation of three machine learning models
-
-✔ Model comparison and evaluation
-
-✔ Complete documentation and final report
-
----
-
-## 📊 Datasets Used
-
-| Website | Language | Number of Reviews |
-|---------|----------|-------------------|
-| **Basalam** | Persian | ~1000 |
-| **Taaghche** | Persian | ~1000 |
-| **Trustpilot** | English | ~1000 |
-
----
-
-## 🧰 Technologies & Libraries
-
-### Web Scraping
-- `requests`
-- `BeautifulSoup`
-- `Selenium`
-
-### Data Processing
-- `pandas`
-- `numpy`
-- `regex`
-
-### Visualization
-- `matplotlib`
-- `seaborn`
-- `wordcloud`
-
-### Machine Learning
-- `scikit-learn`
-  - Logistic Regression
-  - Multinomial Naive Bayes
-  - Linear SVM
-- `TF-IDF Vectorizer`
-
----
-
-## ⚙️ How to Run
-
-### 1. Clone the Repository
+برای ابزارهای پردازش زبان فارسی:
 
 ```bash
-git clone https://github.com/AmirHosseinRezaaie/Sentiment-Analysis-Reviews.git
-cd Sentiment-Analysis-Reviews
+pip install -r requirements-persian.txt
 ```
 
-### 2. Install Dependencies
+نمای کلی فرمان‌ها:
 
 ```bash
-pip install -r requirements.txt
+python -m app.main overview
 ```
 
-### 3. Run the Notebook
+اجرای نوت‌بوک هر منبع:
 
-Open `final_project.ipynb` in Jupyter or Colab and run all cells.
+```bash
+python -m app.main notebook basalam
+python -m app.main notebook taaghche
+python -m app.main notebook trustpilot
+```
 
-### 4. (Optional) Scrape New Data
+اجرای scraper هر وب‌سایت:
 
-Use scripts inside `requirements/WebScraping/` to fetch new reviews.
+```bash
+python -m app.main scrape basalam
+python -m app.main scrape taaghche
+python -m app.main scrape trustpilot
+```
 
----
+اجرای نوت‌بوک به JupyterLab نیاز دارد. اجرای scraperها به مرورگر Chrome و نسخه سازگار ChromeDriver نیاز دارد. ساختار HTML وب‌سایت‌ها ممکن است تغییر کند و در نتیجه استخراج داده به اصلاح selectorها نیاز پیدا کند.
 
-## 📊 Model Results
+## داده‌ها و آزمایش‌ها
 
-| Model | Accuracy | F1-Score |
-|-------|----------|----------|
-| **Logistic Regression** | ~88% | ~0.87 |
-| **Multinomial Naive Bayes** | ~86% | ~0.85 |
-| **Linear SVM** | **~89%** | **~0.88** |
+- `data/` شامل نسخه‌های موجود داده خام و پاک‌سازی‌شده برای سه منبع است.
+- `notebooks/experiments/` روند آزمایش هر منبع را از استخراج تا مدل‌سازی و ارزیابی نگه می‌دارد.
+- `models/` شامل فایل‌های مدل و بردارساز ذخیره‌شده با Joblib و جدول مقایسه مدل‌ها است.
+- `figures/` شامل نمودارهای تولیدشده در آزمایش‌ها است.
+- `files/` شامل نمونه‌های train/test و فایل فونت مورد استفاده در خروجی‌ها است.
+- `reports/` گزارش PDF و Word پروژه را نگه می‌دارد.
 
-> ✅ Linear SVM performed best overall with balanced precision and recall.
+فایل‌های `.pkl` با `joblib` و نسخه‌های مشخصی از کتابخانه‌های پایتون ساخته شده‌اند؛ بارگذاری آن‌ها با نسخه‌های ناسازگار Scikit-learn ممکن است خطا بدهد. این فایل‌ها را فقط از منبع قابل اعتماد بارگذاری کنید.
 
-### Confusion Matrix
+## وضعیت فعلی و محدودیت نتایج
 
-<div align="center">
-<img src="figures/basalam/confusion_matrix_LinearSVM.png" width="400"/>
-</div>
+این مخزن سابقه آزمایش‌های اولیه را حفظ می‌کند و هنوز یک مدل نهایی و قابل اتکا برای استفاده عملیاتی معرفی نمی‌کند. مقدارهای ثبت‌شده در نوت‌بوک‌ها، جدول مقایسه و گزارش‌ها ممکن است مربوط به اجراها و مجموعه‌داده‌های متفاوت باشند؛ بنابراین نباید آن‌ها را بدون اجرای مجدد و ارزیابی یکسان، نتیجه قطعی پروژه در نظر گرفت.
 
----
+در بعضی آزمایش‌ها عدم توازن کلاس‌ها و ضعف تشخیص کلاس منفی مشاهده شده است. برای ارزیابی معتبرتر، گام‌های بعدی پروژه می‌تواند شامل جداسازی داده بدون نشت اطلاعات، ساخت Pipeline یکپارچه پیش‌پردازش و مدل، اعتبارسنجی متقاطع، تنظیم آستانه و گزارش Macro-F1 و معیارهای هر کلاس باشد. این موارد مسیر توسعه بعدی هستند و در این بازآرایی به منطق آزمایش‌های قبلی دست زده نشده است.
 
-## 📈 Visualizations
+## مسیر توسعه بعدی
 
-- Sentiment distribution (Positive/Negative)
-- Word clouds for positive and negative reviews
-- Text length analysis
-- Confusion matrices for each model
-
----
-
-## 🧠 What I Learned
-
-- Real-world data scraping challenges (dynamic content, pagination)
-- Importance of text cleaning for Persian (special characters, half-spaces)
-- Difference between TF-IDF and CountVectorizer
-- Model evaluation beyond accuracy (precision, recall, F1)
-- Proper project structuring and documentation
+1. استخراج منطق مشترک نوت‌بوک‌ها به ماژول‌های مستقل و قابل استفاده مجدد.
+2. تعریف قرارداد داده و schema مشترک برای منابع مختلف.
+3. ساخت pipeline آموزش و ارزیابی قابل تکرار با ثبت تنظیمات و نسخه داده.
+4. مدیریت نسخه مدل‌ها و ارزیابی روی داده‌های دیده‌نشده.
+5. افزودن API و رابط کاربری تعاملی برای تحلیل نظر توسط کاربر.
 
 ---
 
-## 🚀 Future Improvements
+# English Overview
 
-- Deep learning models (LSTM, BERT)
-- Multi-lingual support simultaneously
-- Real-time interactive dashboard
-- Aspect-based sentiment analysis
-- Scraping from more platforms
+A modular research project for review sentiment analysis across Persian and English sources. It covers web scraping, NLP preprocessing, exploratory analysis, TF-IDF feature extraction, classical machine learning, model evaluation, and reporting.
 
----
+- **Scraping:** `src/sentiment_analysis/scraping/`
+- **NLP / preprocessing:** `src/sentiment_analysis/preprocessing/` and experiment notebooks
+- **Experiments:** `notebooks/experiments/`
+- **Datasets:** `data/`
+- **Trained artifacts:** `models/`
+- **Visualizations:** `figures/`
+- **Reports:** `reports/`
+- **CLI entry point:** `app/main.py`
 
-<div align="center">
-
-## 👤 Author
-
-**AmirHossein Rezaaie**
-
-[![GitHub](https://img.shields.io/badge/GitHub-AmirHosseinRezaaie-181717?style=for-the-badge&logo=github)](https://github.com/AmirHosseinRezaaie)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-0A66C2?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/amirhoseinrezaaie)
-
----
-
-### ⭐ If you found this project useful, please consider giving it a Star.
-
-Made with ❤️ for Data and Machine Learning
-
-</div>
+Run `python -m app.main overview` to see available workflows. Install the relevant requirements file before running notebooks or scrapers. Existing experiments and their outputs are preserved as historical research artifacts; reported metrics should be revalidated on a consistent, leakage-free evaluation setup before being treated as production performance.

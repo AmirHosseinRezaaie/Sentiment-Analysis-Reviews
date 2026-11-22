@@ -1,0 +1,11 @@
+﻿# Core data analysis, NLP and machine learning
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn
+wordcloud
+
+# Notebook environment
+jupyterlab
+ipykernel

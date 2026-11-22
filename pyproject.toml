@@ -1,0 +1,16 @@
+﻿[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sentiment-analysis-reviews"
+version = "0.2.0"
+description = "A modular review sentiment analysis research project"
+readme = "README.md"
+requires-python = ">=3.9"
+
+[project.scripts]
+sentiment-project = "app.main:main"
+
+[tool.setuptools]
+packages = ["app", "src", "src.sentiment_analysis", "src.sentiment_analysis.scraping", "src.sentiment_analysis.preprocessing"]
