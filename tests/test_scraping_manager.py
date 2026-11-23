@@ -1,4 +1,6 @@
 import unittest
+from types import SimpleNamespace
+from unittest.mock import patch
 
 from src.sentiment_analysis.scraping.manager import (
     UnsupportedWebsiteError,
@@ -30,6 +32,17 @@ class DetectWebsiteTests(unittest.TestCase):
             with self.subTest(url=url):
                 with self.assertRaises(ValueError):
                     detect_website(url)
+
+    def test_dispatches_url_to_matching_scraper(self):
+        fake_frame = ["review"]
+        fake_module = SimpleNamespace(scrape_reviews=lambda url, **kwargs: fake_frame)
+        with patch("src.sentiment_analysis.scraping.manager.importlib.import_module", return_value=fake_module) as loader:
+            from src.sentiment_analysis.scraping.manager import extract_reviews
+
+            result = extract_reviews("https://taaghche.com/book/123")
+
+        self.assertIs(result, fake_frame)
+        loader.assert_called_once_with(".taaghche", package="src.sentiment_analysis.scraping")
 
 
 if __name__ == "__main__":

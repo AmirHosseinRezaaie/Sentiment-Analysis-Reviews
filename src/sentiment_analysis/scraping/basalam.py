@@ -21,8 +21,9 @@ def _review_id(name: str, date: str, stars: int | None, text: str) -> str:
 
 def _first_text(card: Any, selectors: tuple[str, ...]) -> str:
     for selector in selectors:
-        element = card.find_element("css selector", selector) if hasattr(card, "find_element") else None
-        if element:
+        elements = card.find_elements("css selector", selector) if hasattr(card, "find_elements") else []
+        if elements:
+            element = elements[0]
             value = (element.text or "").strip()
             if value:
                 return value

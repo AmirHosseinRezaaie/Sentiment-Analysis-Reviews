@@ -20,10 +20,10 @@ def parse_review_html(html: str) -> list[dict[str, Any]]:
     from bs4 import BeautifulSoup
 
     soup = BeautifulSoup(html, "html.parser")
-    blocks = soup.select("div.bookComments_comment___TU8v")
+    blocks = soup.select("div[class*='bookComments_comment']")
     reviews: list[dict[str, Any]] = []
     for block in blocks:
-        if block.find_parent("div", class_="bookComments_replies__dXS_n"):
+        if block.find_parent("div", class_=lambda value: value and any("bookComments_replies" in item for item in (value if isinstance(value, list) else [value]))):
             continue
 
         info = block.select_one("[class*='bookComments_info']")
