@@ -7,6 +7,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from src.sentiment_analysis.scraping.manager import extract_reviews
+
 ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOKS = {
     "basalam": ROOT / "notebooks" / "experiments" / "basalam.ipynb",
@@ -34,6 +36,14 @@ def main() -> int:
     scraper_parser = commands.add_parser("scrape", help="Run an existing website scraper.")
     scraper_parser.add_argument("source", choices=SCRAPERS)
 
+    url_scraper_parser = commands.add_parser(
+        "scrape-url",
+        help="Detect the website from a URL and run its review scraper.",
+    )
+    url_scraper_parser.add_argument("url", nargs="?", help="Product, book, or Trustpilot review URL")
+    url_scraper_parser.add_argument("--output", help="Optional CSV output path")
+    url_scraper_parser.add_argument("--headless", action="store_true", help="Run Chrome without a visible window")
+
     args = parser.parse_args()
 
     if args.command == "overview":
@@ -44,6 +54,7 @@ def main() -> int:
         print("4. Artifacts: data/, models/, figures/, files/, reports/")
         print("\nOpen an experiment: python -m app.main notebook basalam")
         print("Run a scraper:       python -m app.main scrape basalam")
+        print("Scrape any URL:      python -m app.main scrape-url")
         return 0
 
     if args.command == "notebook":
@@ -51,6 +62,20 @@ def main() -> int:
         if not notebook.is_file():
             parser.error(f"Notebook not found: {notebook}")
         return subprocess.call([sys.executable, "-m", "jupyter", "lab", str(notebook)], cwd=ROOT)
+
+    if args.command == "scrape-url":
+        url = args.url or input("لینک صفحه موردنظر را وارد کنید: ").strip()
+        try:
+            website_frame = extract_reviews(
+                url,
+                output_path=args.output,
+                headless=args.headless,
+            )
+        except (ValueError, ImportError, AttributeError, RuntimeError) as exc:
+            print(f"خطا در استخراج: {exc}", file=sys.stderr)
+            return 2
+        print(f"تعداد نظرات استخراج‌شده: {len(website_frame)}")
+        return 0
 
     script = SCRAPERS[args.source]
     if not script.is_file():

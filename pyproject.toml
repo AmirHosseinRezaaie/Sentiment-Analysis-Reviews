@@ -7,7 +7,7 @@ name = "sentiment-analysis-reviews"
 version = "0.2.0"
 description = "A modular review sentiment analysis research project"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 [project.scripts]
 sentiment-project = "app.main:main"

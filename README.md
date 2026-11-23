@@ -122,6 +122,28 @@ python -m app.main scrape taaghche
 python -m app.main scrape trustpilot
 ```
 
+### استخراج نظرات با لینک دلخواه
+
+برای استخراج از هر محصول باسلام، هر کتاب طاقچه یا هر صفحه شرکت در Trustpilot، کافی است لینک صفحه را به مدیر مرکزی بدهید. مدیر دامنه را تشخیص می‌دهد و scraper مناسب را اجرا می‌کند:
+
+```bash
+# ورود تعاملی لینک
+python -m app.main scrape-url
+
+# ارسال مستقیم لینک
+python -m app.main scrape-url "https://basalam.com/shop/product/123"
+python -m app.main scrape-url "https://taaghche.com/book/123/book-title" --headless
+python -m app.main scrape-url "https://www.trustpilot.com/review/example.com" --output data/trustpilot/example.csv
+```
+
+برای اجرای مستقیم مدیر استخراج نیز می‌توانید از این فرمان استفاده کنید:
+
+```bash
+python -m src.sentiment_analysis.scraping.manager
+```
+
+در مسیرهای جدید استخراج، سقف ثابتی برای تعداد نظرات تعریف نشده است. جمع‌آوری تا پایان صفحه‌بندی سایت یا تشخیص پایدار انتهای فهرست ادامه پیدا می‌کند. تعداد واقعی نظرات قابل دریافت همچنان به محتوایی که خود وب‌سایت در اختیار مرورگر قرار می‌دهد، دسترسی حساب/منطقه و محدودیت‌های سایت وابسته است. اگر ساختار HTML یا selectorهای سایت تغییر کند، باید parser همان سایت به‌روزرسانی شود.
+
 اجرای نوت‌بوک به JupyterLab نیاز دارد. اجرای scraperها به مرورگر Chrome و نسخه سازگار ChromeDriver نیاز دارد. ساختار HTML وب‌سایت‌ها ممکن است تغییر کند و در نتیجه استخراج داده به اصلاح selectorها نیاز پیدا کند.
 
 ## داده‌ها و آزمایش‌ها

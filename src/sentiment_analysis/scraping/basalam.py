@@ -1,198 +1,167 @@
-# scraper_basalam_by_steps_all.py
-# -*- coding: utf-8 -*-
-import sys
-import os
-import re
-import time
-import pandas as pd
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+"""Basalam product-review scraper.
 
-sys.stdout.reconfigure(encoding='utf-8')
+The scraper accepts any supported Basalam product URL and keeps scrolling until
+the review list reaches a stable end. It has no configured review-count cap.
+"""
 
-MAIN_PAGE_URL = "https://basalam.com/razmishop/product/7005960"
-OUTPUT_CSV = "data/raw_reviews_all.csv"
+from __future__ import annotations
 
-STEP_PIXELS = 650
-MAX_STEPS = 200
-WAIT_AFTER_SCROLL = 3.0
-WAIT_FOR_STYLE_TIMEOUT = 12
+import hashlib
+import logging
+from pathlib import Path
+from typing import Any
 
-def init_driver(headless=False):
-    opts = Options()
-    if headless:
-        opts.add_argument("--headless=new")
-        opts.add_argument("--disable-gpu")
-    opts.add_argument("--window-size=1280,1024")
-    return webdriver.Chrome(options=opts)
+LOGGER = logging.getLogger(__name__)
 
-def open_comments_modal(driver, url):
-    print("🔍 باز کردن صفحه محصول...")
-    driver.get(url)
-    time.sleep(3)
-    btn = WebDriverWait(driver, 20).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'تجربه خریدها')]"))
-    )
-    driver.execute_script("arguments[0].click();", btn)
-    print("✅ روی دکمه 'تجربه خریدها' کلیک شد.")
-    modal = WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.CLASS_NAME, "bs-modal__content"))
-    )
-    print("✅ مودال نظرات باز شد.")
-    comments_section = WebDriverWait(modal, 20).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "div.bs-box.GSBwLT"))
-    )
-    print("✅ بخش نظرات داخل مودال پیدا شد.")
-    return comments_section
 
-def find_scroll_element(comments_section):
-    candidates = comments_section.find_elements(By.CSS_SELECTOR, 'div[data-testid="virtuoso-scroller"]')
-    if candidates:
-        return candidates[0]
-    all_divs = comments_section.find_elements(By.TAG_NAME, "div")
-    for d in all_divs:
-        style = (d.get_attribute("style") or "")
-        if "overflow-y" in style or "padding-top" in style:
-            return d
-    raise RuntimeError("اسکرول دیو پیدا نشد.")
+def _review_id(name: str, date: str, stars: int | None, text: str) -> str:
+    raw = "|".join((name.strip(), date.strip(), str(stars), text.strip()))
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
-def get_padding_top_from_element(el):
-    style = el.get_attribute("style") or ""
-    m = re.search(r'padding-top\s*:\s*([0-9]+)\s*px', style)
-    if m:
-        return int(m.group(1))
-    try:
-        first_child = el.find_element(By.XPATH, "./*")
-        style2 = first_child.get_attribute("style") or ""
-        m2 = re.search(r'padding-top\s*:\s*([0-9]+)\s*px', style2)
-        if m2:
-            return int(m2.group(1))
-    except:
-        pass
-    return None
 
-def wait_for_padding_increase(scroll_el, prev_padding, timeout=WAIT_FOR_STYLE_TIMEOUT):
-    start = time.time()
-    while time.time() - start < timeout:
-        cur = get_padding_top_from_element(scroll_el)
-        if cur is not None and prev_padding is not None and cur > prev_padding:
-            return cur
-        if cur is not None and prev_padding is None:
-            return cur
-        time.sleep(0.5)
-    return None
+def _first_text(card: Any, selectors: tuple[str, ...]) -> str:
+    for selector in selectors:
+        elements = card.find_elements("css selector", selector) if hasattr(card, "find_elements") else []
+        if elements:
+            element = elements[0]
+            value = (element.text or "").strip()
+            if value:
+                return value
+    return ""
 
-def collect_new_reviews(comments_section, seen_ids):
-    review_elements = comments_section.find_elements(By.CSS_SELECTOR, "div.eN63l8._9ltxo8")
-    new_items = []
-    for r in review_elements:
-        rid = r.get_attribute("id") or r.get_attribute("data-item-index") or r.get_attribute("data-index") or None
-        if not rid:
-            rid = f"noid-{hash(r.text) & 0xfffffff}"
-        if rid in seen_ids:
+
+def parse_review_cards(section: Any) -> list[dict[str, Any]]:
+    """Parse currently rendered review cards; exposed for offline testing."""
+    from selenium.webdriver.common.by import By
+
+    cards = []
+    for selector in ('div[data-testid*="review"]', "div.eN63l8._9ltxo8"):
+        cards = section.find_elements(By.CSS_SELECTOR, selector)
+        if cards:
+            break
+
+    parsed: list[dict[str, Any]] = []
+    for card in cards:
+        name = _first_text(card, ("[class*='userName']", ".Rqze5j", "[data-testid*='user']"))
+        date = _first_text(card, ("time", ".eN4XZm", "[class*='date']"))
+        comment = _first_text(card, ("[data-testid*='comment']", ".nkJy9o", "[class*='comment']", "[class*='reviewText']"))
+        try:
+            active = card.find_elements(By.CSS_SELECTOR, ".bs-rating__star--active")
+            stars: int | None = len(active) if active else None
+        except Exception:
+            stars = None
+        if not (name or date or comment):
             continue
-        seen_ids.add(rid)
-        try:
-            name = r.find_element(By.CLASS_NAME, "Rqze5j").text.strip()
-        except:
-            name = ""
-        try:
-            date = r.find_element(By.CLASS_NAME, "eN4XZm").text.strip()
-        except:
-            date = ""
-        try:
-            stars = len(r.find_elements(By.CLASS_NAME, "bs-rating__star--active"))
-        except:
-            stars = 0
-        try:
-            text = r.find_element(By.CLASS_NAME, "nkJy9o").text.strip()
-        except:
-            text = ""
-        new_items.append({
-            "id": rid,
+        parsed.append({
+            "id": _review_id(name, date, stars, comment),
             "نام کاربر": name,
             "تاریخ": date,
             "امتیاز": stars,
-            "متن نظر": text
+            "متن نظر": comment,
         })
-    return new_items, len(review_elements)
+    return parsed
 
-WAIT_AFTER_SCROLL = 0.1
-WAIT_FOR_STYLE_TIMEOUT = 1.0
 
-def scrape_all_reviews(driver, comments_section, step_pixels=STEP_PIXELS):
-    scroll_el = find_scroll_element(comments_section)
-    print("✅ اسکرولر پیدا شد و آمادهٔ اسکرول مرحله‌ای است.")
+def scrape_reviews(
+    url: str,
+    *,
+    output_path: str | Path | None = None,
+    headless: bool = False,
+    stable_rounds: int = 5,
+    wait_seconds: int = 15,
+) -> "pd.DataFrame":
+    """Collect all accessible reviews from a Basalam product page.
 
-    seen = set()
-    all_reviews = []
-    no_new_count = 0
+    ``stable_rounds`` is an end-of-list signal, not a maximum number of
+    reviews or scroll operations. Every newly discovered review resets it.
+    """
+    from selenium import webdriver
+    from selenium.webdriver.chrome.options import Options
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support.ui import WebDriverWait
+    import pandas as pd
 
-    initial_new, total_now = collect_new_reviews(comments_section, seen)
-    if initial_new:
-        print(f"⏺ ابتدا {len(initial_new)} مورد جدید یافت شد.")
-        all_reviews.extend(initial_new)
-    else:
-        print(f"⏺ ابتدا هیچ مورد جدیدی یافت نشد (total_now={total_now}).")
+    options = Options()
+    if headless:
+        options.add_argument("--headless=new")
+    options.add_argument("--window-size=1280,1024")
+    driver = webdriver.Chrome(options=options)
+    reviews: dict[str, dict[str, Any]] = {}
+    destination = Path(output_path) if output_path else Path("data/basalam") / "reviews.csv"
 
-    step = 0
-    prev_padding = get_padding_top_from_element(scroll_el)
-    print(f"🔢 padding-top شروع: {prev_padding}")
-
-    while step < MAX_STEPS:
-        step += 1
-        print(f"\n--- گام {step} — اسکرول {step_pixels}px ---")
-        driver.execute_script(
-            "arguments[0].scrollTop = arguments[0].scrollTop + arguments[1];",
-            scroll_el, step_pixels
-        )
-        time.sleep(0.25)
-
-        new_padding = wait_for_padding_increase(scroll_el, prev_padding, timeout=3)
-        if new_padding is None:
-            print("⚠️ padding-top تغییر نکرد (timeout). تلاش بعدی.")
-            driver.execute_script(
-                "arguments[0].scrollTop = arguments[0].scrollTop + arguments[1];",
-                scroll_el, step_pixels
-            )
-            time.sleep(0.6)
-            new_padding = get_padding_top_from_element(scroll_el)
-        else:
-            print(f"✅ padding-top تغییر کرد: {prev_padding} -> {new_padding}")
-
-        prev_padding = new_padding if new_padding is not None else prev_padding
-        time.sleep(0.6)
-
-        new_items, total_now = collect_new_reviews(comments_section, seen)
-        if new_items:
-            print(f"➕ {len(new_items)} نظر جدید اضافه شد (کل الان: {len(all_reviews) + len(new_items)})")
-            all_reviews.extend(new_items)
-            no_new_count = 0
-        else:
-            print("➖ مورد جدیدی پیدا نشد در این گام.")
-            no_new_count += 1
-            if no_new_count >= 2:
-                print("⏹ دو بار متوالی مورد جدیدی پیدا نشد. توقف اسکرول.")
-                break
-
-        print(f"🔢 تعداد کلی لود شده در DOM: {total_now}, جمع نهایی فعلی: {len(all_reviews)}")
-
-    print("\n✅ پایان اسکرول مرحله‌ای.")
-    return pd.DataFrame(all_reviews)
-
-def main():
-    os.makedirs("data", exist_ok=True)
-    driver = init_driver(headless=False)
     try:
-        comments_section = open_comments_modal(driver, MAIN_PAGE_URL)
-        df = scrape_all_reviews(driver, comments_section, step_pixels=STEP_PIXELS)
-        df.to_csv(OUTPUT_CSV, index=False, encoding="utf-8-sig")
-        print(f"\n💾 فایل ذخیره شد در: {OUTPUT_CSV}, تعداد: {len(df)}")
+        driver.get(url)
+        button = WebDriverWait(driver, wait_seconds).until(
+            lambda d: d.find_element(By.XPATH, "//button[contains(., 'تجربه خریدها')]")
+        )
+        driver.execute_script("arguments[0].click();", button)
+        section = WebDriverWait(driver, wait_seconds).until(
+            lambda d: d.find_element(By.CSS_SELECTOR, "div.bs-modal__content")
+        )
+        scroll_el = WebDriverWait(driver, wait_seconds).until(
+            lambda d: section.find_element(By.CSS_SELECTOR, '[data-testid="virtuoso-scroller"]')
+        )
+
+        unchanged_rounds = 0
+        previous_position: tuple[int, int] | None = None
+        while unchanged_rounds < stable_rounds:
+            for review in parse_review_cards(section):
+                reviews.setdefault(review["id"], review)
+
+            position = driver.execute_script(
+                "return [arguments[0].scrollTop, arguments[0].scrollHeight];", scroll_el
+            )
+            driver.execute_script(
+                "arguments[0].scrollTop = arguments[0].scrollTop + Math.max(500, arguments[0].clientHeight * 0.8);",
+                scroll_el,
+            )
+            try:
+                WebDriverWait(driver, wait_seconds).until(
+                    lambda d: len(parse_review_cards(section)) > 0
+                    and d.execute_script(
+                        "return [arguments[0].scrollTop, arguments[0].scrollHeight];", scroll_el
+                    ) != position
+                )
+            except Exception:
+                # A timeout can mean the end of a virtual list, but it is not
+                # enough by itself: require several unchanged observations.
+                pass
+
+            for review in parse_review_cards(section):
+                reviews.setdefault(review["id"], review)
+            current = driver.execute_script(
+                "return [arguments[0].scrollTop, arguments[0].scrollHeight];", scroll_el
+            )
+            if len(reviews) and current == previous_position and current == position:
+                unchanged_rounds += 1
+            elif current == position and current == previous_position:
+                unchanged_rounds += 1
+            else:
+                unchanged_rounds = 0
+            previous_position = tuple(current)
+
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            pd.DataFrame(reviews.values()).to_csv(destination, index=False, encoding="utf-8-sig")
+            LOGGER.info("Basalam reviews collected: %d", len(reviews))
+
+        return pd.DataFrame(reviews.values())
     finally:
         driver.quit()
 
+
+def main() -> int:
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Extract reviews from a Basalam product URL")
+    parser.add_argument("url", nargs="?")
+    parser.add_argument("--output")
+    parser.add_argument("--headless", action="store_true")
+    args = parser.parse_args()
+    url = args.url or input("لینک محصول باسلام را وارد کنید: ").strip()
+    frame = scrape_reviews(url, output_path=args.output, headless=args.headless)
+    print(f"تعداد نظرات استخراج‌شده: {len(frame)}")
+    return 0
+
+
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
