@@ -1,140 +1,174 @@
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import time
-import pandas as pd
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-import sys
-from bs4 import BeautifulSoup
+"""Trustpilot company-review scraper for arbitrary company review URLs."""
+
+from __future__ import annotations
+
+import hashlib
+import logging
 import re
+from pathlib import Path
+from typing import Any
 
-sys.stdout.reconfigure(encoding='utf-8')
+LOGGER = logging.getLogger(__name__)
 
-URL = "https://www.trustpilot.com/review/www.fashionnova.com?page=1"
-MAX_REVIEWS = 100
 
-def init_driver():
-    options = Options()
-    # options.add_argument("--headless")  # اگر لازم بود بدون نمایش مرورگر
-    driver = webdriver.Chrome(options=options)
-    driver.set_window_size(1280, 900)
-    return driver
+def _stable_id(name: str, date: str, stars: int | None, comment: str) -> str:
+    payload = "|".join((name.strip(), date.strip(), str(stars), comment.strip()))
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
-def scroll_to_bottom(driver):
-    for _ in range(5):
-        driver.execute_script("window.scrollBy(0, 400);")
-        time.sleep(0.15)
-    # کمی صبر برای بارگذاری محتوا
-    time.sleep(2)
 
-def remove_ads(driver):
-    try:
-        # منتظر می‌مونیم تبلیغ بیاد (تا 5 ثانیه)
-        ad_present = WebDriverWait(driver, 5).until(
-            EC.presence_of_element_located((
-                By.CSS_SELECTOR,
-                'div[data-consent-banner], iframe[src*="ads"], div[class*="popup"], div[class*="modal"]'
-            ))
-        )
-        driver.execute_script("""
-            const ads = document.querySelectorAll('div[data-consent-banner], iframe[src*="ads"], div[class*="popup"], div[class*="modal"]');
-            ads.forEach(ad => ad.remove());
-        """)
-        print("✅ تبلیغات حذف شد.")
-    except:
-        print("⚠️ تبلیغی مشاهده نشد یا زودتر حذف شده بود.")
+def _text(card: Any, selectors: tuple[str, ...]) -> str:
+    for selector in selectors:
+        node = card.select_one(selector)
+        if node:
+            value = node.get_text(" ", strip=True)
+            if value:
+                return value
+    return ""
 
-def parse_reviews(driver):
 
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-    reviews = []
+def _rating_from_alt(alt_text: str) -> int | None:
+    match = re.search(r"rated\s+(\d+)\s+out\s+of\s+5", alt_text, re.I)
+    if not match:
+        match = re.search(r"rated\s+(\d+)\b", alt_text, re.I)
+    if not match:
+        return None
+    rating = int(match.group(1))
+    return rating if 1 <= rating <= 5 else None
 
-    cards = soup.find_all("article", attrs={"data-service-review-card-paper": True})
+
+def parse_review_html(html: str) -> list[dict[str, Any]]:
+    """Parse review cards and preserve unknown ratings as None, never zero."""
+    from bs4 import BeautifulSoup
+
+    soup = BeautifulSoup(html, "html.parser")
+    cards = soup.select("article[data-service-review-card-paper]")
+    reviews: list[dict[str, Any]] = []
     for card in cards:
-        try:
-            # --- نام کاربر ---
-            name_tag = card.select_one("span.typography_heading-xxs__...")  # باید دقیق ببینیم
-            name = name_tag.get_text(strip=True) if name_tag else ""
+        name = _text(card, (
+            "[data-consumer-name-typography]",
+            "span[class*='typography_heading-xxs']",
+            "a[href*='/users/'] span",
+        ))
+        date_node = card.select_one("time")
+        date = (date_node.get("datetime") or date_node.get_text(" ", strip=True)) if date_node else ""
 
-            # --- تاریخ ---
-            date_tag = card.select_one("time")
-            date = date_tag.get_text(strip=True) if date_tag else ""
+        stars: int | None = None
+        rating_node = card.select_one("[data-service-review-rating]")
+        if rating_node:
+            raw_rating = rating_node.get("data-service-review-rating")
+            if raw_rating and str(raw_rating).isdigit():
+                stars = int(raw_rating)
+        if stars is None:
+            for image in card.select("img[alt]"):
+                stars = _rating_from_alt(image.get("alt", ""))
+                if stars is not None:
+                    break
 
-            # --- ستاره‌ها ---
-            stars = 0
-            stars_tag = card.select_one("img[alt*='Rated']")
-            if stars_tag:
-                alt_text = stars_tag.get("alt", "")
-                match = re.search(r"Rated\s+(\d+)", alt_text)
-                if match:
-                    stars = int(match.group(1))
-
-            # --- متن نظر ---
-            comment_tag = card.select_one("p[data-service-review-text-typography]")
-            comment = comment_tag.get_text(" ", strip=True) if comment_tag else ""
-
-            reviews.append({
-                "name": name,
-                "date": date,
-                "stars": stars,
-                "comment": comment
-            })
-        except Exception as e:
-            print("⚠️ خطا در parse کارت:", e)
+        comment = _text(card, (
+            "p[data-service-review-text-typography]",
+            "[data-service-review-text-typography]",
+        ))
+        if not (name or date or comment or stars is not None):
             continue
-
+        reviews.append({
+            "id": _stable_id(name, date, stars, comment),
+            "name": name,
+            "date": date,
+            "stars": stars,
+            "comment": comment,
+        })
     return reviews
 
-def click_next_page(driver):
+
+def _next_page_url(driver: Any) -> str | None:
+    from selenium.webdriver.common.by import By
+
+    links = driver.find_elements(
+        By.CSS_SELECTOR,
+        'a[name="pagination-button-next"][aria-label="Next page"], a[name="pagination-button-next"]',
+    )
+    if not links:
+        return None
+    link = links[0]
+    if not link.is_enabled() or link.get_attribute("aria-disabled") == "true":
+        return None
+    href = link.get_attribute("href")
+    return href or "__CLICK_NEXT__"
+
+
+def scrape_reviews(
+    url: str,
+    *,
+    output_path: str | Path | None = None,
+    headless: bool = False,
+    wait_seconds: int = 20,
+) -> "pd.DataFrame":
+    """Collect all review pages available from the supplied Trustpilot URL."""
+    import pandas as pd
+    from selenium import webdriver
+    from selenium.webdriver.chrome.options import Options
+    from selenium.webdriver.support.ui import WebDriverWait
+
+    options = Options()
+    if headless:
+        options.add_argument("--headless=new")
+    options.add_argument("--window-size=1280,900")
+    driver = webdriver.Chrome(options=options)
+    destination = Path(output_path) if output_path else Path("data/trustpilot") / "reviews.csv"
+    collected: dict[str, dict[str, Any]] = {}
+    visited_pages: set[str] = set()
+
     try:
-        wait = WebDriverWait(driver, 5)  # کوتاه‌تر کردیم
-        next_btn = wait.until(EC.element_to_be_clickable(
-            (By.CSS_SELECTOR, 'a[name="pagination-button-next"][aria-label="Next page"]')
-        ))
-        next_btn.click()
-        time.sleep(3)  # صبر کمتر برای لود صفحه
-        return True
-    except:
-        return False
+        driver.get(url)
+        while True:
+            current_url = driver.current_url
+            if current_url in visited_pages:
+                raise RuntimeError("صفحه‌بندی Trustpilot به URL تکراری رسید؛ برای جلوگیری از حلقه متوقف شد.")
+            visited_pages.add(current_url)
 
-def main():
-    driver = init_driver()
-    print("🔍 باز کردن صفحه اصلی...")
-    driver.get(URL)
-    time.sleep(3)
-    remove_ads(driver)
+            WebDriverWait(driver, wait_seconds).until(
+                lambda d: d.find_elements("css selector", "article[data-service-review-card-paper]")
+            )
+            page_reviews = parse_review_html(driver.page_source)
+            for review in page_reviews:
+                collected.setdefault(review["id"], review)
 
-    all_reviews = []
-    page = 1
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            pd.DataFrame(collected.values()).to_csv(destination, index=False, encoding="utf-8-sig")
+            LOGGER.info("Trustpilot reviews collected: %d (page %d)", len(collected), len(visited_pages))
 
-    while True:
-        print(f"\n📄 پردازش صفحه {page} ...")
-        scroll_to_bottom(driver)
-        remove_ads(driver)
-        reviews = parse_reviews(driver)
-        print(f"📝 تعداد نظرات این صفحه: {len(reviews)}")
-        all_reviews.extend(reviews)
+            next_url = _next_page_url(driver)
+            if next_url is None:
+                break
+            if next_url == "__CLICK_NEXT__":
+                next_button = driver.find_element(
+                    "css selector", 'a[name="pagination-button-next"]'
+                )
+                driver.execute_script("arguments[0].click();", next_button)
+                WebDriverWait(driver, wait_seconds).until(lambda d: d.current_url != current_url)
+            else:
+                if next_url in visited_pages:
+                    raise RuntimeError("لینک صفحه بعدی Trustpilot تکراری است؛ استخراج متوقف شد.")
+                driver.get(next_url)
 
-        print(f"💡 جمع کل نظرات: {len(all_reviews)} / {MAX_REVIEWS}")
-        if len(all_reviews) >= MAX_REVIEWS:
-            print("🎯 به حد نصاب نظرات رسیدیم. پایان کار.")
-            break
+        return pd.DataFrame(collected.values())
+    finally:
+        driver.quit()
 
-        if not click_next_page(driver):
-            print("⛔ صفحه بعدی وجود ندارد یا دکمه قابل کلیک نیست.")
-            break
 
-        page += 1
+def main() -> int:
+    import argparse
 
-    if all_reviews:
-        df = pd.DataFrame(all_reviews[:MAX_REVIEWS])
-        df.to_csv("trustpilot_fashionnova_reviews.csv", index=False, encoding="utf-8-sig")
-        print(f"💾 نتایج ذخیره شدند در trustpilot_fashionnova_reviews.csv")
-    else:
-        print("⚠️ هیچ نظری استخراج نشد!")
+    parser = argparse.ArgumentParser(description="Extract reviews from any Trustpilot company URL")
+    parser.add_argument("url", nargs="?")
+    parser.add_argument("--output")
+    parser.add_argument("--headless", action="store_true")
+    args = parser.parse_args()
+    url = args.url or input("لینک صفحه نظرات شرکت در Trustpilot را وارد کنید: ").strip()
+    frame = scrape_reviews(url, output_path=args.output, headless=args.headless)
+    print(f"تعداد نظرات استخراج‌شده: {len(frame)}")
+    return 0
 
-    driver.quit()
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
