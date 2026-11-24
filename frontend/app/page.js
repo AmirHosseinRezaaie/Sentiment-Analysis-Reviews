@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { predictDemoSentiment } from './demo-predictor.mjs';
 
 const chapters = [
   { id: 'scraping', number: '۰۱', title: 'جمع‌آوری دیدگاه‌ها', short: 'استخراج از وب' },
@@ -18,9 +19,6 @@ const models = {
   'MultinomialNB': { title: 'بیز ساده چندجمله‌ای', detail: 'با احتمال رخداد واژه‌ها، محتمل‌ترین کلاس را انتخاب می‌کند.', positive: 0.96, negative: 1.08, tag: 'احتمال واژه‌ها' },
   RandomForest: { title: 'جنگل تصادفی', detail: 'رأی چندین درخت تصمیم را ترکیب می‌کند؛ گزینه‌ای برای آزمایش‌های بعدی پروژه.', positive: 1.05, negative: 1.02, tag: 'رأی درخت‌ها' },
 };
-
-const positiveWords = ['عالی', 'خوب', 'عاشق', 'زیبا', 'راضی', 'پیشنهاد', 'سریع', 'کیفیت', 'دوست', 'بهترین', 'مفید', 'خوشحال', 'قیمت مناسب', 'عالیه'];
-const negativeWords = ['بد', 'ضعیف', 'افتضاح', 'متأسفانه', 'ناراضی', 'خراب', 'کند', 'بی‌کیفیت', 'پشیمان', 'مشکل', 'دیر', 'اصلا', 'ناامید', 'گرون'];
 
 function Icon({ name, size = 20 }) {
   const paths = {
@@ -109,18 +107,8 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  const stats = useMemo(()=>({ words: textValue.trim().split(/\s+/).filter(Boolean).length, chars: textValue.length }),[textValue]);
-
   function predict() {
-    if (!textValue.trim()) { setPrediction(null); return; }
-    const normalized = textValue.toLowerCase();
-    const pos = positiveWords.reduce((n,w)=>n+(normalized.includes(w)?1:0),0);
-    const neg = negativeWords.reduce((n,w)=>n+(normalized.includes(w)?1:0),0);
-    const config = models[model];
-    const score = (pos*config.positive - neg*config.negative) + (ngram==='3'?0.12:ngram==='1'?-0.08:0) + (maxFeatures/12000-0.4)*0.12 + (testSize-20)*0.002;
-    const sentiment = score >= 0 ? 'مثبت' : 'منفی';
-    const confidence = Math.min(96, Math.max(54, Math.round(56 + Math.abs(score)*17 + Math.min(stats.words,20)*0.55)));
-    setPrediction({sentiment,confidence,reason:pos+neg===0?'واژه احساسی شناخته‌شده‌ای پیدا نشد؛ نتیجه با اطمینان پایین و بر اساس حالت پیش‌فرض نمایش داده شده است.':`بر اساس ${pos} نشانه مثبت و ${neg} نشانه منفی در متن، ${config.title} این برچسب را پیشنهاد می‌کند.`});
+    setPrediction(predictDemoSentiment({ text: textValue, model, maxFeatures, testSize, ngram }));
   }
 
   const activeIndex = chapters.findIndex(c=>c.id===active);
