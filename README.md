@@ -1,80 +1,108 @@
-﻿# تحلیل احساسات نظرات | Sentiment Analysis Reviews
+<div align="center">
 
-پروژه‌ای پژوهشی برای بررسی یک جریان کامل تحلیل احساسات روی دیدگاه‌های کاربران: از جمع‌آوری داده از وب‌سایت‌ها تا پردازش زبان طبیعی، آموزش مدل‌های یادگیری ماشین و ارزیابی نتایج.
+# Sentiment Analysis Reviews
 
-این مخزن در ابتدا به شکل چند نوت‌بوک مستقل توسعه داده شده است. ساختار فعلی مسئولیت هر حوزه را جدا می‌کند و نوت‌بوک‌ها و خروجی‌های تاریخی را برای بررسی و بازتولید آزمایش‌ها نگه می‌دارد.
+### از یک نظر تا یک تصمیم؛ آزمایشگاه تعاملی تحلیل احساسات
 
-## نقشه پروژه
+روایتی بصری از مسیر استخراج دیدگاه کاربران، پردازش زبان طبیعی، ساخت ویژگی، آموزش مدل‌های یادگیری ماشین و ارزیابی آن‌ها.
+
+[مشاهده آزمایشگاه آنلاین](https://amirhosseinrezaaie.github.io/Sentiment-Analysis-Reviews/)
+
+![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs)
+![React](https://img.shields.io/badge/React-19-149eca?logo=react)
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?logo=scikitlearn)
+![GitHub Pages](https://img.shields.io/badge/Deploy-GitHub%20Pages-222?logo=github)
+
+</div>
+
+---
+
+## تجربه پروژه
+
+این پروژه بررسی می‌کند که چطور می‌توان از دیدگاه‌های پراکنده کاربران، داده‌ای ساختاریافته تولید کرد و با کمک مدل‌های یادگیری ماشین احساس مثبت یا منفی متن را تشخیص داد.
+
+رابط تعاملی پروژه، این مسیر را به هفت ایستگاه تبدیل می‌کند. با اسکرول صفحه، هر مرحله همراه با یک نمایش بصری توضیح داده می‌شود و در پایان می‌توان تنظیمات آزمایشی را تغییر داد و یک متن دلخواه وارد کرد.
+
+**[ورود به آزمایشگاه تحلیل احساسات](https://amirhosseinrezaaie.github.io/Sentiment-Analysis-Reviews/)**
+
+## مسیر تحلیل
+
+| مرحله | کار انجام‌شده | فناوری‌ها و خروجی |
+|---|---|---|
+| ۱. Web Scraping | استخراج دیدگاه‌ها از صفحات وب | Python، Selenium، BeautifulSoup، CSV |
+| ۲. Dataset & Labels | اتصال متن نظر به امتیاز و برچسب احساس | متن، ستاره، کلاس مثبت/منفی |
+| ۳. NLP | نرمال‌سازی، پاک‌سازی، توکن‌سازی و حذف توقف‌واژه‌ها | Hazm، Regex |
+| ۴. Feature Engineering | تبدیل متن به ویژگی‌های عددی | TF-IDF، Unigram و Bigram |
+| ۵. Machine Learning | آموزش و مقایسه طبقه‌بندها | MultinomialNB، Logistic Regression، Linear SVM |
+| ۶. Evaluation | سنجش کیفیت پیش‌بینی | Accuracy، Precision، Recall، F1، Confusion Matrix |
+| ۷. Playground | تجربه تعاملی تنظیمات و ورود متن | رابط Next.js؛ اتصال مدل واقعی در گام توسعه بعدی |
+
+## پیش‌نمایش معماری
+
+```mermaid
+flowchart TD
+    A[Basalam / Taaghche / Trustpilot] --> B[Web Scraping]
+    B --> C[Raw Reviews + Stars]
+    C --> D[Cleaning & Labeling]
+    D --> E[Persian NLP / Hazm]
+    E --> F[TF-IDF Features]
+    F --> G[Train / Test Split]
+    G --> H[SMOTE on training data]
+    H --> I[Naive Bayes]
+    H --> J[Logistic Regression]
+    H --> K[Linear SVM]
+    I --> L[Evaluation]
+    J --> L
+    K --> L
+    L --> M[Metrics & Reports]
+```
+
+## ساختار مخزن
 
 ```text
 SentimentProject/
-├── app/                         # نقطه ورود و رابط خط فرمان پروژه
-│   └── main.py
-├── src/
-│   └── sentiment_analysis/
-│       ├── scraping/             # استخراج داده از وب‌سایت‌ها
-│       └── preprocessing/        # کدهای قدیمی پیش‌پردازش متن
-├── notebooks/
-│   └── experiments/              # آزمایش‌های کامل هر منبع داده
-├── data/                         # داده‌های خام و پاک‌سازی‌شده، به تفکیک منبع
-│   ├── basalam/
-│   ├── Taaghche/
-│   └── trustpilot/
-├── models/                       # مدل‌های ذخیره‌شده و جدول مقایسه
-├── figures/                      # نمودارهای EDA و ماتریس‌های درهم‌ریختگی
-├── files/                        # مجموعه‌های train/test و منابع جانبی
-├── reports/                      # گزارش نهایی PDF و DOCX
-├── requirements-core.txt         # وابستگی‌های پایه تحلیل و نوت‌بوک
-├── requirements-scraping.txt     # وابستگی‌های وب‌اسکرپینگ
-├── requirements-persian.txt      # وابستگی‌های NLP فارسی
-└── pyproject.toml                # مشخصات نصب و فرمان پروژه
+├── app/                         # نقطه ورود خط فرمان
+├── src/sentiment_analysis/
+│   ├── scraping/                 # scraperها و مدیر استخراج
+│   └── preprocessing/            # کدهای پیش‌پردازش
+├── notebooks/experiments/        # آزمایش‌های Basalam، Taaghche و Trustpilot
+├── data/                         # داده خام و پاک‌سازی‌شده
+├── models/                       # مدل‌ها، TF-IDF و مقایسه نتایج
+├── figures/                      # نمودارها و ماتریس‌های درهم‌ریختگی
+├── files/                        # داده‌های جانبی و مجموعه‌های آزمون
+├── reports/                      # گزارش‌های پروژه
+├── frontend/                     # رابط تعاملی Next.js
+└── .github/workflows/            # ساخت و انتشار خودکار GitHub Pages
 ```
 
-## حوزه‌های فنی
+## داده‌ها و مدل‌ها
 
-| حوزه | محل | مسئولیت |
-|---|---|---|
-| Web Scraping | `src/sentiment_analysis/scraping/` | جمع‌آوری دیدگاه از Basalam، Taaghche و Trustpilot با Selenium و BeautifulSoup |
-| NLP و پیش‌پردازش | `src/sentiment_analysis/preprocessing/` و نوت‌بوک‌ها | پاک‌سازی متن، نرمال‌سازی، حذف stop words و آماده‌سازی داده فارسی و انگلیسی |
-| EDA و مصورسازی | نوت‌بوک‌ها و `figures/` | بررسی توزیع برچسب‌ها، طول دیدگاه‌ها، Word Cloud و نمودارهای تحلیلی |
-| Feature Engineering | نوت‌بوک‌ها | تبدیل متن به ویژگی‌های عددی با TF-IDF و n-gram |
-| Machine Learning | نوت‌بوک‌ها و `models/` | آزمایش Multinomial Naive Bayes، Logistic Regression و Linear SVM |
-| Evaluation | نوت‌بوک‌ها، `models/model_comparison.csv` و `figures/` | بررسی Accuracy، Precision، Recall، F1 و Confusion Matrix |
-| گزارش‌دهی | `reports/` | نگهداری گزارش مکتوب پروژه |
-| رابط اجرا | `app/` | دسترسی یکپارچه به آزمایش‌ها و اسکریپت‌های استخراج از خط فرمان |
+نوت‌بوک‌های آزمایش موجود شامل پاک‌سازی متن، آماده‌سازی داده، TF-IDF با حداکثر ۱۰٬۰۰۰ ویژگی و بازه n-gram برابر (۱، ۲)، تقسیم آموزش/آزمون با نسبت ۸۰/۲۰ و `random_state=42` هستند. در شاخه‌های آزمایشی، SMOTE روی داده آموزش اعمال شده است.
 
-## جریان داده
+مدل‌های ذخیره‌شده و مقایسه‌شده در آزمایش‌ها:
 
-```text
-وب‌سایت‌ها
-    │
-    ▼
-Web Scraping (src/sentiment_analysis/scraping)
-    │
-    ▼
-داده خام (data/<source>/)
-    │
-    ▼
-NLP / Text Preprocessing
-    │
-    ▼
-داده پاک‌سازی‌شده و برچسب‌خورده
-    │
-    ▼
-EDA → TF-IDF → Train / Test
-    │
-    ▼
-Naive Bayes / Logistic Regression / Linear SVM
-    │
-    ▼
-Evaluation → models/ + figures/ + reports/
-```
+- **Multinomial Naive Bayes**
+- **Logistic Regression** با `class_weight='balanced'`
+- **Linear SVM** با `class_weight='balanced'`
 
-نوت‌بوک‌ها مسیرهای داده و خروجی را از ریشه مخزن می‌خوانند. به همین دلیل هنگام اجرای آن‌ها، ریشه پروژه به عنوان working directory تنظیم می‌شود و پوشه‌های `data/`، `models/`، `figures/` و `files/` در ریشه باقی مانده‌اند.
+### اعداد ثبت‌شده در فایل مقایسه
 
-## شروع سریع
+مقادیر زیر مستقیماً از `models/model_comparison.csv` خوانده شده‌اند:
 
-Python 3.9 یا جدیدتر پیشنهاد می‌شود. ابتدا محیط مجازی بسازید و وابستگی‌های موردنیاز خود را نصب کنید:
+| مدل | Accuracy | Precision کلاس مثبت | Recall کلاس مثبت | F1 کلاس مثبت |
+|---|---:|---:|---:|---:|
+| MultinomialNB | 65.79% | 100.00% | 64.86% | 78.69% |
+| Logistic Regression | 66.84% | 99.19% | 66.49% | 79.61% |
+| Linear SVM | 66.84% | 99.19% | 66.49% | 79.61% |
+
+این اعداد خروجی تاریخی یک آزمایش هستند و معیار عملکرد تضمین‌شده یا نتیجه نهایی پروژه محسوب نمی‌شوند. گزارش PDF موجود اعداد دیگری دارد؛ پیش از نتیجه‌گیری باید منبع داده، تقسیم‌بندی و تنظیمات ارزیابی همه مدل‌ها یکسان و دوباره اجرا شوند.
+
+**نکته کیفیت داده:** در بررسی فایل‌های فعلی، داده پاک‌سازی‌شده Trustpilot شامل ۱٬۲۰۰ ردیف با برچسب صفر است. چنین مجموعه تک‌کلاسه‌ای برای ارزیابی طبقه‌بندی دودویی مناسب نیست و برچسب‌گذاری آن باید اصلاح شود. داده‌های موجود همچنین عدم‌توازن شدید کلاس‌ها را نشان می‌دهند؛ بنابراین گزارش معیارهای هر کلاس و Macro-F1 اهمیت دارد.
+
+## اجرای بخش پایتون
+
+Python 3.10 یا جدیدتر پیشنهاد می‌شود.
 
 ```bash
 python -m venv .venv
@@ -88,102 +116,78 @@ source .venv/bin/activate
 pip install -r requirements-core.txt
 ```
 
-برای اجرای استخراج داده، وابستگی scraping را هم نصب کنید:
-
-```bash
-pip install -r requirements-scraping.txt
-```
-
-برای ابزارهای پردازش زبان فارسی:
+برای پردازش فارسی و scraping، وابستگی‌های مربوط را نیز نصب کنید:
 
 ```bash
 pip install -r requirements-persian.txt
+pip install -r requirements-scraping.txt
 ```
 
 نمای کلی فرمان‌ها:
 
 ```bash
 python -m app.main overview
-```
-
-اجرای نوت‌بوک هر منبع:
-
-```bash
 python -m app.main notebook basalam
 python -m app.main notebook taaghche
 python -m app.main notebook trustpilot
 ```
 
-اجرای scraper هر وب‌سایت:
+استخراج دیدگاه از URL:
 
 ```bash
-python -m app.main scrape basalam
-python -m app.main scrape taaghche
-python -m app.main scrape trustpilot
+python -m app.main scrape-url "https://basalam.com/..."
+python -m app.main scrape-url "https://taaghche.com/book/..." --headless
+python -m app.main scrape-url "https://www.trustpilot.com/review/example.com"
 ```
 
-### استخراج نظرات با لینک دلخواه
+اجرای scraperها به Chrome و ChromeDriver سازگار نیاز دارد. ساختار HTML وب‌سایت‌ها ممکن است تغییر کند و selectorهای استخراج باید متناسب با آن به‌روزرسانی شوند.
 
-برای استخراج از هر محصول باسلام، هر کتاب طاقچه یا هر صفحه شرکت در Trustpilot، کافی است لینک صفحه را به مدیر مرکزی بدهید. مدیر دامنه را تشخیص می‌دهد و scraper مناسب را اجرا می‌کند:
+## اجرای رابط کاربری
 
 ```bash
-# ورود تعاملی لینک
-python -m app.main scrape-url
-
-# ارسال مستقیم لینک
-python -m app.main scrape-url "https://basalam.com/shop/product/123"
-python -m app.main scrape-url "https://taaghche.com/book/123/book-title" --headless
-python -m app.main scrape-url "https://www.trustpilot.com/review/example.com" --output data/trustpilot/example.csv
+cd frontend
+npm ci
+npm run dev
 ```
 
-برای اجرای مستقیم مدیر استخراج نیز می‌توانید از این فرمان استفاده کنید:
+برای ساخت نسخه static:
 
 ```bash
-python -m src.sentiment_analysis.scraping.manager
+npm run build
 ```
 
-در مسیرهای جدید استخراج، سقف ثابتی برای تعداد نظرات تعریف نشده است. جمع‌آوری تا پایان صفحه‌بندی سایت یا تشخیص پایدار انتهای فهرست ادامه پیدا می‌کند. تعداد واقعی نظرات قابل دریافت همچنان به محتوایی که خود وب‌سایت در اختیار مرورگر قرار می‌دهد، دسترسی حساب/منطقه و محدودیت‌های سایت وابسته است. اگر ساختار HTML یا selectorهای سایت تغییر کند، باید parser همان سایت به‌روزرسانی شود.
+خروجی قابل انتشار در `frontend/out/` ساخته می‌شود. رابط برای GitHub Pages پیکربندی شده است.
 
-اجرای نوت‌بوک به JupyterLab نیاز دارد. اجرای scraperها به مرورگر Chrome و نسخه سازگار ChromeDriver نیاز دارد. ساختار HTML وب‌سایت‌ها ممکن است تغییر کند و در نتیجه استخراج داده به اصلاح selectorها نیاز پیدا کند.
+### وضعیت آزمایشگاه تعاملی
 
-## داده‌ها و آزمایش‌ها
+نسخه فعلی فرانت‌اند یک نمونه نمایشی سمت مرورگر است. انتخاب مدل، n-gram، تعداد ویژگی‌ها و سهم آزمون در رابط قابل تغییر است؛ پیش‌بینی متن در این نسخه با قواعد ساده واژگانی شبیه‌سازی می‌شود و اجرای مدل‌های pickle پایتون یا آموزش مجدد مدل در مرورگر انجام نمی‌شود. گزینه Random Forest نیز برای نمایش مسیر توسعه آینده اضافه شده و جزو مدل‌های آموزش‌دیده فعلی نیست.
 
-- `data/` شامل نسخه‌های موجود داده خام و پاک‌سازی‌شده برای سه منبع است.
-- `notebooks/experiments/` روند آزمایش هر منبع را از استخراج تا مدل‌سازی و ارزیابی نگه می‌دارد.
-- `models/` شامل فایل‌های مدل و بردارساز ذخیره‌شده با Joblib و جدول مقایسه مدل‌ها است.
-- `figures/` شامل نمودارهای تولیدشده در آزمایش‌ها است.
-- `files/` شامل نمونه‌های train/test و فایل فونت مورد استفاده در خروجی‌ها است.
-- `reports/` گزارش PDF و Word پروژه را نگه می‌دارد.
+گام بعدی برای تبدیل این محیط به ابزار آزمایش واقعی، ساخت API پایتون برای بارگذاری Pipeline سازگار، اعمال تنظیمات آموزش/ارزیابی، پیش‌بینی متن با همان پیش‌پردازش زمان آموزش و بازگرداندن خروجی و معیارهای قابل بازتولید است.
 
-فایل‌های `.pkl` با `joblib` و نسخه‌های مشخصی از کتابخانه‌های پایتون ساخته شده‌اند؛ بارگذاری آن‌ها با نسخه‌های ناسازگار Scikit-learn ممکن است خطا بدهد. این فایل‌ها را فقط از منبع قابل اعتماد بارگذاری کنید.
+## انتشار خودکار
 
-## وضعیت فعلی و محدودیت نتایج
+Workflow در `.github/workflows/deploy-pages.yml` با هر push مرتبط به شاخه `main` اجرا می‌شود، وابستگی‌های فرانت‌اند را نصب می‌کند، خروجی static را می‌سازد و آن را روی GitHub Pages منتشر می‌کند.
 
-این مخزن سابقه آزمایش‌های اولیه را حفظ می‌کند و هنوز یک مدل نهایی و قابل اتکا برای استفاده عملیاتی معرفی نمی‌کند. مقدارهای ثبت‌شده در نوت‌بوک‌ها، جدول مقایسه و گزارش‌ها ممکن است مربوط به اجراها و مجموعه‌داده‌های متفاوت باشند؛ بنابراین نباید آن‌ها را بدون اجرای مجدد و ارزیابی یکسان، نتیجه قطعی پروژه در نظر گرفت.
+در تنظیمات مخزن GitHub، بخش **Settings → Pages → Build and deployment** باید روی **GitHub Actions** قرار بگیرد. پس از موفقیت اولین اجرای workflow، نشانی سایت در بخش Pages و خروجی مرحله Deploy نمایش داده می‌شود.
 
-در بعضی آزمایش‌ها عدم توازن کلاس‌ها و ضعف تشخیص کلاس منفی مشاهده شده است. برای ارزیابی معتبرتر، گام‌های بعدی پروژه می‌تواند شامل جداسازی داده بدون نشت اطلاعات، ساخت Pipeline یکپارچه پیش‌پردازش و مدل، اعتبارسنجی متقاطع، تنظیم آستانه و گزارش Macro-F1 و معیارهای هر کلاس باشد. این موارد مسیر توسعه بعدی هستند و در این بازآرایی به منطق آزمایش‌های قبلی دست زده نشده است.
+## نقشه راه
 
-## مسیر توسعه بعدی
-
-1. استخراج منطق مشترک نوت‌بوک‌ها به ماژول‌های مستقل و قابل استفاده مجدد.
-2. تعریف قرارداد داده و schema مشترک برای منابع مختلف.
-3. ساخت pipeline آموزش و ارزیابی قابل تکرار با ثبت تنظیمات و نسخه داده.
-4. مدیریت نسخه مدل‌ها و ارزیابی روی داده‌های دیده‌نشده.
-5. افزودن API و رابط کاربری تعاملی برای تحلیل نظر توسط کاربر.
+- [x] یکپارچه‌سازی scraperهای Basalam، Taaghche و Trustpilot
+- [x] ثبت آزمایش‌های NLP و مدل‌های کلاسیک در نوت‌بوک‌ها
+- [x] رابط داستان‌محور و اسکرولی برای نمایش مراحل پروژه
+- [x] نمونه اولیه آزمایشگاه تعاملی در فرانت‌اند
+- [ ] یکسان‌سازی schema و برچسب‌گذاری داده‌ها
+- [ ] ساخت Pipeline قابل بازتولید برای آموزش و ارزیابی
+- [ ] ارائه API برای پیش‌بینی با مدل واقعی
+- [ ] اتصال Playground به API و نمایش معیارهای زنده
+- [ ] اعتبارسنجی مجدد مدل‌ها و ثبت نسخه داده و مدل
 
 ---
 
-# English Overview
+<div align="center">
 
-A modular research project for review sentiment analysis across Persian and English sources. It covers web scraping, NLP preprocessing, exploratory analysis, TF-IDF feature extraction, classical machine learning, model evaluation, and reporting.
+ساخته‌شده برای تبدیل داده‌های متنی به بینش قابل استفاده.
 
-- **Scraping:** `src/sentiment_analysis/scraping/`
-- **NLP / preprocessing:** `src/sentiment_analysis/preprocessing/` and experiment notebooks
-- **Experiments:** `notebooks/experiments/`
-- **Datasets:** `data/`
-- **Trained artifacts:** `models/`
-- **Visualizations:** `figures/`
-- **Reports:** `reports/`
-- **CLI entry point:** `app/main.py`
+**Sentiment Analysis Reviews**
 
-Run `python -m app.main overview` to see available workflows. Install the relevant requirements file before running notebooks or scrapers. Existing experiments and their outputs are preserved as historical research artifacts; reported metrics should be revalidated on a consistent, leakage-free evaluation setup before being treated as production performance.
+</div>
