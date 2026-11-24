@@ -107,6 +107,12 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (prediction) {
+      setPrediction(predictDemoSentiment({ text: textValue, model, maxFeatures, testSize, ngram }));
+    }
+  }, [model, maxFeatures, testSize, ngram, textValue]);
+
   function predict() {
     setPrediction(predictDemoSentiment({ text: textValue, model, maxFeatures, testSize, ngram }));
   }
