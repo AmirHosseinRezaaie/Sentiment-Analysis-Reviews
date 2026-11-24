@@ -25,6 +25,9 @@ function Icon({ name, size = 20 }) {
     spark: <><path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-2-5.8L4 11l6-2.2L12 3Z"/><path d="m19 14 1.1 2.9L23 18l-2.9 1.1L19 22l-1.1-2.9L15 18l2.9-1.1L19 14Z"/></>,
     arrow: <><path d="M7 17 17 7M7 7h10v10"/></>,
     globe: <><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></>,
+    mail: <><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></>,
+    instagram: <><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></>,
+    github: <><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 19 4.77 5.07 5.07 0 0 0 18.91 1S17.73.65 15 2.48a13.38 13.38 0 0 0-7 0C5.27.65 4.09 1 4.09 1A5.07 5.07 0 0 0 4 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 8 18.13V22"/></>,
     code: <><path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 4l-4 16"/></>,
     layers: <><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/></>,
     chart: <><path d="M4 19V5M4 19h17"/><path d="m7 15 4-4 3 2 6-7"/></>,
@@ -119,7 +122,7 @@ export default function Home() {
 
   const activeIndex = chapters.findIndex(c=>c.id===active);
   return <main>
-    <header className="site-header"><a className="brand" href="#top"><span className="brand-mark"><Icon name="spark" size={19}/></span><span>sentiment<span className="brand-light">lab</span><small>REVIEW INTELLIGENCE</small></span></a><nav className="top-nav"><a href="#scraping">مسیر پروژه</a><a href="#results">نتایج</a><a href="#playground">آزمایشگاه</a></nav><a className="header-cta" href="#playground">امتحانش کن <Icon name="arrow" size={15}/></a></header>
+    <header className="site-header"><a className="brand" href="#top"><span className="brand-mark"><Icon name="spark" size={19}/></span><span>sentiment<span className="brand-light">lab</span><small>REVIEW INTELLIGENCE</small></span></a><nav className="top-nav"><a href="#scraping">مسیر پروژه</a><a href="#results">نتایج</a><a href="#playground">آزمایشگاه</a><a href="#creator">سازنده</a></nav><a className="header-cta" href="#playground">امتحانش کن <Icon name="arrow" size={15}/></a></header>
 
     <section className="hero" id="top"><div className="hero-grid"/><div className="hero-content"><div className="hero-pill"><span/> یک سفر از داده تا درک احساس</div><h1>هر نظر، یک داستان.<br/><span>ما احساسش را پیدا می‌کنیم.</span></h1><p>از دل هزاران دیدگاه پراکنده، الگوهای پنهان را بیرون می‌کشیم؛ با وب‌اسکرپینگ، پردازش زبان طبیعی و یادگیری ماشین.</p><div className="hero-actions"><a href="#scraping" className="primary-link">شروع سفر <Icon name="arrow" size={17}/></a><a href="#playground" className="secondary-link"><Icon name="play" size={15}/> تست زنده مدل</a></div><div className="hero-proof"><div className="proof-avatars"><i>ب</i><i>ط</i><i>T</i></div><span>۳ منبع داده</span><b/> <span>۶ مرحله پردازش</span><b/> <span>یک تصمیم هوشمند</span></div></div><div className="hero-art"><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="hero-core"><div className="core-face"><Icon name="spark" size={46}/></div><span>AI</span></div><div className="orbit-node node-one"><Icon name="globe"/></div><div className="orbit-node node-two"><Icon name="code"/></div><div className="orbit-node node-three"><Icon name="chart"/></div><div className="orbit-node node-four">♥</div><div className="floating-word word-one">احساس مثبت</div><div className="floating-word word-two">تحلیل متن</div><div className="floating-word word-three">داده واقعی</div></div><a className="scroll-cue" href="#scraping"><Icon name="mouse" size={17}/> برای کشف مراحل اسکرول کنید <Icon name="chevron" size={16}/></a></section>
 
@@ -144,6 +147,18 @@ export default function Home() {
       </div>
     </div>
 
-    <footer className="site-footer"><div className="footer-brand"><span className="brand-mark"><Icon name="spark" size={19}/></span><b>sentiment<span>lab</span></b></div><p>هر دیدگاه، سرنخی برای شناخت بهتر تجربه کاربران است.</p><div className="footer-meta"><span>Sentiment Analysis Reviews</span><span>Built with curiosity & data</span><a href="#top">بازگشت به بالا ↑</a></div></footer>
+    <section className="creator-section" id="creator">
+      <div className="creator-heading"><div className="eyebrow"><span/> THE PERSON BEHIND THE PROJECT</div><h2>پشت این پروژه،<br/><span>یک علاقه‌مند به ساختن است.</span></h2><p>این پروژه با عشق به داده، هوش مصنوعی و تجربه ساختن توسعه داده شده است. خوشحال می‌شوم نظرتان را بشنوم یا برای همکاری و گفت‌وگو در ارتباط باشیم.</p></div>
+      <div className="creator-card"><div className="creator-photo-wrap"><img className="creator-photo" src="https://github.com/AmirHosseinRezaaie.png" alt="تصویر پروفایل امیرحسین رضایی" loading="lazy"/><span className="photo-orbit orbit-a"/><span className="photo-orbit orbit-b"/><span className="creator-online"><i/> آماده گفت‌وگو و همکاری</span></div><div className="creator-info"><span className="creator-kicker">PROJECT CREATOR</span><h3>امیرحسین رضایی</h3><p className="creator-role">توسعه‌دهنده · علاقه‌مند به داده و یادگیری ماشین</p><p className="creator-bio">از ایده تا پیاده‌سازی؛ این آزمایشگاه تلاشی است برای روایت ساده و تعاملی یک مسیر واقعی تحلیل احساسات. اگر پیشنهادی برای بهتر شدن پروژه دارید، مشتاق شنیدنش هستم.</p><div className="contact-grid">
+        <a className="contact-link telegram" href="https://t.me/amirhossein122333" target="_blank" rel="noreferrer"><span className="contact-icon">➤</span><span><b>تلگرام</b><small>@amirhossein122333</small></span><Icon name="arrow" size={15}/></a>
+        <a className="contact-link whatsapp" href="https://wa.me/qr/DXZSKFSOLGCMH1" target="_blank" rel="noreferrer"><span className="contact-icon">◉</span><span><b>واتساپ</b><small>گفت‌وگوی مستقیم</small></span><Icon name="arrow" size={15}/></a>
+        <a className="contact-link eitaa" href="https://eitaa.com/amirhossein122333" target="_blank" rel="noreferrer"><span className="contact-icon">ای</span><span><b>ایتا</b><small>@amirhossein122333</small></span><Icon name="arrow" size={15}/></a>
+        <a className="contact-link instagram" href="https://instagram.com/amir_hosein122333" target="_blank" rel="noreferrer"><span className="contact-icon"><Icon name="instagram" size={19}/></span><span><b>اینستاگرام</b><small>@amir_hosein122333</small></span><Icon name="arrow" size={15}/></a>
+        <a className="contact-link email" href="mailto:ah.rezaaie@gmail.com"><span className="contact-icon"><Icon name="mail" size={19}/></span><span><b>ایمیل</b><small>ah.rezaaie@gmail.com</small></span><Icon name="arrow" size={15}/></a>
+        <a className="contact-link github" href="https://github.com/AmirHosseinRezaaie" target="_blank" rel="noreferrer"><span className="contact-icon"><Icon name="github" size={19}/></span><span><b>گیت‌هاب</b><small>AmirHosseinRezaaie</small></span><Icon name="arrow" size={15}/></a>
+      </div><a className="resume-link" href="https://amirhosseinrezaaie.github.io/CW_project_Resume-Web-Page/" target="_blank" rel="noreferrer">مشاهده رزومه و نمونه‌کارها <Icon name="arrow" size={17}/></a></div></div>
+    </section>
+
+    <footer className="site-footer"><div className="footer-brand"><span className="brand-mark"><Icon name="spark" size={19}/></span><b>sentiment<span>lab</span></b></div><p>هر دیدگاه، سرنخی برای شناخت بهتر تجربه کاربران است.</p><div className="footer-meta"><span>Sentiment Analysis Reviews</span><a href="#creator">ارتباط با سازنده</a><span>Built with curiosity & data</span><a href="#top">بازگشت به بالا ↑</a></div></footer>
   </main>;
 }

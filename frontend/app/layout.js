@@ -1,8 +1,8 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'از یک نظر تا یک تصمیم | آزمایشگاه تحلیل احساسات',
-  description: 'روایت تعاملی مسیر تحلیل احساسات؛ از استخراج دیدگاه تا پیش‌بینی مثبت یا منفی بودن آن.',
+  title: 'Sentiment Lab | آزمایشگاه تحلیل احساسات امیرحسین رضایی',
+  description: 'روایت تعاملی تحلیل احساسات؛ از استخراج دیدگاه تا پیش‌بینی، ساخته‌شده توسط امیرحسین رضایی.',
 };
 
 export default function RootLayout({ children }) {
