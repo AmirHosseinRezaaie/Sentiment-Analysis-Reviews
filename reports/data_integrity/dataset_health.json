@@ -1,0 +1,383 @@
+[
+  {
+    "file": "data/basalam/cleaned_reviews.csv",
+    "rows": 947,
+    "columns": [
+      "name",
+      "stars",
+      "comment",
+      "sentiment",
+      "comment_length",
+      "processed_comment"
+    ],
+    "exact_duplicates": 17,
+    "duplicate_ids": 0,
+    "normalized_text_duplicates": 77,
+    "missing_by_column": {
+      "name": 0,
+      "stars": 0,
+      "comment": 257,
+      "sentiment": 0,
+      "comment_length": 0,
+      "processed_comment": 257
+    },
+    "rating_column": "stars",
+    "rating_distribution": {
+      "1": 19,
+      "2": 5,
+      "4": 132,
+      "5": 791
+    },
+    "invalid_or_missing_ratings": 0,
+    "neutral_three_star_ratings": 0,
+    "label_column": "sentiment",
+    "label_distribution": {
+      "0": 24,
+      "1": 923
+    },
+    "invalid_labels": 0,
+    "rating_label_mismatches": 0,
+    "missing_review_text": 257,
+    "encoding_replacement_characters": 0,
+    "malformed_rows": 0,
+    "issues": [
+      "missing_review_text",
+      "duplicate_records_or_text"
+    ],
+    "status": "needs_attention"
+  },
+  {
+    "file": "data/basalam/comments.csv",
+    "rows": 982,
+    "columns": [
+      "id",
+      "نام کاربر",
+      "تاریخ",
+      "امتیاز",
+      "متن نظر"
+    ],
+    "exact_duplicates": 0,
+    "duplicate_ids": 0,
+    "normalized_text_duplicates": 80,
+    "missing_by_column": {
+      "id": 0,
+      "نام کاربر": 0,
+      "تاریخ": 0,
+      "امتیاز": 0,
+      "متن نظر": 264
+    },
+    "rating_column": "امتیاز",
+    "rating_distribution": {
+      "1": 19,
+      "2": 5,
+      "3": 35,
+      "4": 132,
+      "5": 791
+    },
+    "invalid_or_missing_ratings": 0,
+    "neutral_three_star_ratings": 35,
+    "label_column": null,
+    "label_distribution": {},
+    "invalid_labels": 0,
+    "rating_label_mismatches": 0,
+    "missing_review_text": 264,
+    "encoding_replacement_characters": 0,
+    "malformed_rows": 0,
+    "issues": [
+      "missing_review_text",
+      "duplicate_records_or_text"
+    ],
+    "status": "needs_attention"
+  },
+  {
+    "file": "data/basalam/raw_reviews_all.csv",
+    "rows": 990,
+    "columns": [
+      "id",
+      "نام کاربر",
+      "تاریخ",
+      "امتیاز",
+      "متن نظر"
+    ],
+    "exact_duplicates": 0,
+    "duplicate_ids": 0,
+    "normalized_text_duplicates": 82,
+    "missing_by_column": {
+      "id": 0,
+      "نام کاربر": 0,
+      "تاریخ": 0,
+      "امتیاز": 0,
+      "متن نظر": 264
+    },
+    "rating_column": "امتیاز",
+    "rating_distribution": {
+      "1": 19,
+      "2": 6,
+      "3": 35,
+      "4": 134,
+      "5": 796
+    },
+    "invalid_or_missing_ratings": 0,
+    "neutral_three_star_ratings": 35,
+    "label_column": null,
+    "label_distribution": {},
+    "invalid_labels": 0,
+    "rating_label_mismatches": 0,
+    "missing_review_text": 264,
+    "encoding_replacement_characters": 0,
+    "malformed_rows": 0,
+    "issues": [
+      "missing_review_text",
+      "duplicate_records_or_text"
+    ],
+    "status": "needs_attention"
+  },
+  {
+    "file": "data/basalam/raw_reviews_all_scraper_export.csv",
+    "rows": 990,
+    "columns": [
+      "id",
+      "نام کاربر",
+      "تاریخ",
+      "امتیاز",
+      "متن نظر"
+    ],
+    "exact_duplicates": 0,
+    "duplicate_ids": 0,
+    "normalized_text_duplicates": 82,
+    "missing_by_column": {
+      "id": 0,
+      "نام کاربر": 0,
+      "تاریخ": 0,
+      "امتیاز": 0,
+      "متن نظر": 264
+    },
+    "rating_column": "امتیاز",
+    "rating_distribution": {
+      "1": 19,
+      "2": 6,
+      "3": 35,
+      "4": 134,
+      "5": 796
+    },
+    "invalid_or_missing_ratings": 0,
+    "neutral_three_star_ratings": 35,
+    "label_column": null,
+    "label_distribution": {},
+    "invalid_labels": 0,
+    "rating_label_mismatches": 0,
+    "missing_review_text": 264,
+    "encoding_replacement_characters": 0,
+    "malformed_rows": 0,
+    "issues": [
+      "missing_review_text",
+      "duplicate_records_or_text"
+    ],
+    "status": "needs_attention"
+  },
+  {
+    "file": "data/Taaghche/cleaned_reviews.csv",
+    "rows": 2212,
+    "columns": [
+      "name",
+      "stars",
+      "comment",
+      "sentiment",
+      "comment_length",
+      "processed_comment"
+    ],
+    "exact_duplicates": 0,
+    "duplicate_ids": 0,
+    "normalized_text_duplicates": 52,
+    "missing_by_column": {
+      "name": 0,
+      "stars": 0,
+      "comment": 0,
+      "sentiment": 0,
+      "comment_length": 0,
+      "processed_comment": 1
+    },
+    "rating_column": "stars",
+    "rating_distribution": {
+      "1": 77,
+      "2": 44,
+      "4": 293,
+      "5": 1793,
+      "invalid/unknown": 5
+    },
+    "invalid_or_missing_ratings": 5,
+    "neutral_three_star_ratings": 0,
+    "label_column": "sentiment",
+    "label_distribution": {
+      "0": 126,
+      "1": 2086
+    },
+    "invalid_labels": 0,
+    "rating_label_mismatches": 0,
+    "missing_review_text": 0,
+    "encoding_replacement_characters": 0,
+    "malformed_rows": 0,
+    "issues": [
+      "duplicate_records_or_text",
+      "invalid_or_missing_ratings"
+    ],
+    "status": "needs_attention"
+  },
+  {
+    "file": "data/Taaghche/raw_reviews.csv",
+    "rows": 2339,
+    "columns": [
+      "name",
+      "stars",
+      "comment"
+    ],
+    "exact_duplicates": 0,
+    "duplicate_ids": 0,
+    "normalized_text_duplicates": 52,
+    "missing_by_column": {
+      "name": 0,
+      "stars": 0,
+      "comment": 0
+    },
+    "rating_column": "stars",
+    "rating_distribution": {
+      "1": 77,
+      "2": 44,
+      "3": 127,
+      "4": 293,
+      "5": 1793,
+      "invalid/unknown": 5
+    },
+    "invalid_or_missing_ratings": 5,
+    "neutral_three_star_ratings": 127,
+    "label_column": null,
+    "label_distribution": {},
+    "invalid_labels": 0,
+    "rating_label_mismatches": 0,
+    "missing_review_text": 0,
+    "encoding_replacement_characters": 0,
+    "malformed_rows": 0,
+    "issues": [
+      "duplicate_records_or_text",
+      "invalid_or_missing_ratings"
+    ],
+    "status": "needs_attention"
+  },
+  {
+    "file": "data/trustpilot/cleaned_reviews.csv",
+    "rows": 1200,
+    "columns": [
+      "name",
+      "stars",
+      "comment",
+      "sentiment",
+      "comment_length",
+      "processed_comment"
+    ],
+    "exact_duplicates": 0,
+    "duplicate_ids": 0,
+    "normalized_text_duplicates": 2,
+    "missing_by_column": {
+      "name": 0,
+      "stars": 0,
+      "comment": 0,
+      "sentiment": 0,
+      "comment_length": 0,
+      "processed_comment": 0
+    },
+    "rating_column": "stars",
+    "rating_distribution": {
+      "invalid/unknown": 1200
+    },
+    "invalid_or_missing_ratings": 1200,
+    "neutral_three_star_ratings": 0,
+    "label_column": "sentiment",
+    "label_distribution": {
+      "0": 1200
+    },
+    "invalid_labels": 0,
+    "rating_label_mismatches": 0,
+    "missing_review_text": 0,
+    "encoding_replacement_characters": 0,
+    "malformed_rows": 0,
+    "issues": [
+      "duplicate_records_or_text",
+      "invalid_or_missing_ratings"
+    ],
+    "status": "needs_attention"
+  },
+  {
+    "file": "data/trustpilot/trustpilot_fashionnova_reviews_all_pages.csv",
+    "rows": 1200,
+    "columns": [
+      "name",
+      "date",
+      "stars",
+      "comment"
+    ],
+    "exact_duplicates": 0,
+    "duplicate_ids": 0,
+    "normalized_text_duplicates": 3,
+    "missing_by_column": {
+      "name": 0,
+      "date": 0,
+      "stars": 0,
+      "comment": 0
+    },
+    "rating_column": "stars",
+    "rating_distribution": {
+      "invalid/unknown": 1200
+    },
+    "invalid_or_missing_ratings": 1200,
+    "neutral_three_star_ratings": 0,
+    "label_column": null,
+    "label_distribution": {},
+    "invalid_labels": 0,
+    "rating_label_mismatches": 0,
+    "missing_review_text": 0,
+    "encoding_replacement_characters": 0,
+    "malformed_rows": 0,
+    "issues": [
+      "duplicate_records_or_text",
+      "invalid_or_missing_ratings"
+    ],
+    "status": "needs_attention"
+  },
+  {
+    "file": "data/trustpilot/trustpilot_reviews_scraper_export.csv",
+    "rows": 1200,
+    "columns": [
+      "name",
+      "date",
+      "stars",
+      "comment"
+    ],
+    "exact_duplicates": 0,
+    "duplicate_ids": 0,
+    "normalized_text_duplicates": 2,
+    "missing_by_column": {
+      "name": 0,
+      "date": 0,
+      "stars": 0,
+      "comment": 0
+    },
+    "rating_column": "stars",
+    "rating_distribution": {
+      "invalid/unknown": 1200
+    },
+    "invalid_or_missing_ratings": 1200,
+    "neutral_three_star_ratings": 0,
+    "label_column": null,
+    "label_distribution": {},
+    "invalid_labels": 0,
+    "rating_label_mismatches": 0,
+    "missing_review_text": 0,
+    "encoding_replacement_characters": 0,
+    "malformed_rows": 0,
+    "issues": [
+      "duplicate_records_or_text",
+      "invalid_or_missing_ratings"
+    ],
+    "status": "needs_attention"
+  }
+]

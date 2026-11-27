@@ -12,6 +12,7 @@ from bidi.algorithm import get_display
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from imblearn.over_sampling import SMOTE
+from .labels import sentiment_from_rating
 import sys
 sys.stdout.reconfigure(encoding='utf-8')
 
@@ -27,10 +28,11 @@ if not os.path.exists(csv_file):
 df = pd.read_csv(csv_file, encoding="utf-8-sig")
 
 # ------------------------
-# 2. حذف امتیاز 3 و برچسب‌گذاری
+# 2. اعتبارسنجی امتیاز و برچسب‌گذاری دودویی
 # ------------------------
-df = df[df['stars'] != 3]
-df['sentiment'] = df['stars'].apply(lambda x: 1 if x >= 4 else 0)
+df['stars'] = pd.to_numeric(df['stars'], errors='coerce')
+df = df[df['stars'].between(1, 5) & df['stars'].ne(3)].copy()
+df['sentiment'] = df['stars'].map(sentiment_from_rating).astype('int8')
 
 # ------------------------
 # 3. EDA اولیه
