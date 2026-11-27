@@ -15,6 +15,10 @@ class SentimentRatingLabelTests(unittest.TestCase):
         for rating in (0, 6, -1, None, "", "unknown", "4.5"):
             self.assertIsNone(normalize_rating(rating))
 
+    def test_persian_and_arabic_digits_are_supported(self):
+        self.assertEqual(normalize_rating("۵"), 5)
+        self.assertEqual(normalize_rating("٤"), 4)
+
     def test_binary_labels_exclude_neutral_and_invalid_ratings(self):
         self.assertEqual(sentiment_from_rating(1), 0)
         self.assertEqual(sentiment_from_rating(2), 0)

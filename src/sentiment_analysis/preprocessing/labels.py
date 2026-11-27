@@ -4,12 +4,16 @@ from __future__ import annotations
 
 from decimal import Decimal, InvalidOperation
 from typing import Any
+import unicodedata
 
 
 def normalize_rating(value: Any) -> int | None:
     """Normalize a five-star rating; invalid and missing values stay unknown."""
     try:
-        numeric_rating = Decimal(str(value).strip())
+        raw_rating = str(value).strip()
+        # Trustpilot and Persian sources may serialize digits in different scripts.
+        normalized = "".join(str(unicodedata.digit(char)) if char.isdigit() else char for char in raw_rating)
+        numeric_rating = Decimal(normalized)
     except (InvalidOperation, TypeError, ValueError):
         return None
     if not numeric_rating.is_finite() or numeric_rating != numeric_rating.to_integral_value():
