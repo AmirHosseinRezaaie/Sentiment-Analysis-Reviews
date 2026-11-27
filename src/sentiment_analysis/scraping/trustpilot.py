@@ -8,6 +8,8 @@ import re
 from pathlib import Path
 from typing import Any
 
+from src.sentiment_analysis.preprocessing.labels import normalize_rating as _parse_rating
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -56,8 +58,7 @@ def parse_review_html(html: str) -> list[dict[str, Any]]:
         rating_node = card.select_one("[data-service-review-rating]")
         if rating_node:
             raw_rating = rating_node.get("data-service-review-rating")
-            if raw_rating and str(raw_rating).isdigit():
-                stars = int(raw_rating)
+            stars = _parse_rating(raw_rating)
         if stars is None:
             for image in card.select("img[alt]"):
                 stars = _rating_from_alt(image.get("alt", ""))
