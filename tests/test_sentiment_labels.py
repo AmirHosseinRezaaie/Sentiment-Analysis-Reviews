@@ -32,15 +32,16 @@ class SentimentRatingLabelTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "reviews.csv"
             path.write_text(
-                "stars,comment,sentiment\n5,good,1\n3,neutral,0\n0,unknown,0\n",
+                "stars,comment,sentiment\n5,good,1\n5, good  ,1\n3,neutral,0\n0,unknown,0\n",
                 encoding="utf-8",
             )
             report = audit_csv(path)
 
-        self.assertEqual(report["rows"], 3)
+        self.assertEqual(report["rows"], 4)
         self.assertEqual(report["invalid_or_missing_ratings"], 1)
         self.assertEqual(report["neutral_three_star_ratings"], 1)
         self.assertEqual(report["rating_label_mismatches"], 0)
+        self.assertEqual(report["normalized_text_duplicates"], 1)
 
 
 if __name__ == "__main__":
